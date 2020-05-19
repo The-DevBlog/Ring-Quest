@@ -23,6 +23,39 @@ obstacle = { // obstacle rectangle to jump over
   x: 300,
   y: 525,
 };
+
+function Obstacle(height, width, x, y, color) {
+  this.height = height;
+  this.width = width;
+  this.x = x;
+  this.y = y;
+  this.color = color;
+
+  ctx.beginPath();
+  ctx.fillStyle = color;
+  ctx.fillRect(this.x, this.y, this.width, this.height);
+
+  // obstacle collision detection
+  // first IF statement detects collision with LEFT side of obstacle
+  if (rectangle.x > this.x - rectangle.width &&
+    rectangle.y > ctx.canvas.height - this.height &&
+    rectangle.x < this.x) {
+    rectangle.x = this.x - rectangle.width;
+    // second IF statement to detect collision with RIGHT side of obstacle
+  } else if (rectangle.x < this.x + rectangle.width + rectangle.width &&
+    rectangle.y > ctx.canvas.height - this.height &&
+    rectangle.x > this.x + rectangle.width) {
+    rectangle.x = this.x + rectangle.width + rectangle.width;
+    // third IF statement detects collision with TOP of obstacle (and would allow character/box to "stand" on top), and re-sets "jump" ability to FALSE to allow player to jump again. Also re-sets y-velocity to avoid "rocket jump" glitch.
+  } else if (rectangle.y > ctx.canvas.height - this.height - rectangle.height &&
+    rectangle.x > this.x - rectangle.width &&
+    rectangle.x < this.x + this.width) {
+    rectangle.y = ctx.canvas.height - this.width - rectangle.width;
+    rectangle.jumping = false;
+    rectangle.y_vel = 10;
+  }
+}
+
 // object to control the keyboard input
 controller = {
   left: false,
@@ -33,19 +66,19 @@ controller = {
     var keyState = (event.type == 'keydown') ? true : false;
     // switch statement to determine which key is being pressed. This could have been done with an 'if.. else if' statement, but the switch statement is a much cleaner way to handle this. Also, each key on a keyboard has a specific 'keyCode' attached to it. keyCode is a built in JavaScript variable.
     switch (event.keyCode) {
-      case 37: // left arrow key
-        controller.left = keyState;
-        break;
-      case 32: // space bar key
-        controller.space = keyState;
-        break;
-      case 39: // right arrow key
-        controller.right = keyState;
+    case 37: // left arrow key
+      controller.left = keyState;
+      break;
+    case 32: // space bar key
+      controller.space = keyState;
+      break;
+    case 39: // right arrow key
+      controller.right = keyState;
     }
   }
 };
 loop = function () {
-  // controls jumping movement 
+  // controls jumping movement
   if (controller.space && rectangle.jumping == false) {
     // negative y value will allow rectangle to move up
     rectangle.y_vel -= 60;
@@ -79,6 +112,7 @@ loop = function () {
   } else if (rectangle.x > ctx.canvas.width - 50) {
     rectangle.x = ctx.canvas.width - 50;
   }
+
   // obstacle collision detection
   // first IF statement detects collision with LEFT side of obstacle
   if (rectangle.x > 300 - rectangle.width &&
@@ -108,6 +142,11 @@ loop = function () {
   //  draw obstacle
   ctx.fillStyle = 'brown';
   ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+
+  new Obstacle(100, 100, 500, 525, 'green');
+  new Obstacle(100, 100, 900, 525, 'black');
+
+
   // update browser when it is ready to draw again
   window.requestAnimationFrame(loop);
 };

@@ -1,0 +1,95 @@
+body {
+  margin: 0 auto;
+  font-family: 'IM Fell Double Pica', serif;
+}
+
+h1 {
+  font-family: 'Bilbo', cursive;
+  font-size: 50px;
+  color: #53453c;
+  line-height: 0;
+}
+
+h2 {
+  font-size: 16px;
+  color: #53453c;
+  margin-left: 32px;
+}
+
+#logo {
+  margin-right: 100px;
+  float: left;
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav li {
+  display:inline-block;
+  margin-left: 100px; 
+  margin-top: 20px;
+  padding-top: 10px; 
+  font-size: 20px;
+  font-family: 'IM Fell Double Pica', serif;
+  padding: 20px;
+}
+
+nav a {
+  color: rgb(55, 58, 58);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+nav :hover {
+  color: rgb(46, 70, 46);
+}
+
+header {
+  padding-left: 30px;
+  background-color:#c5b6ba;
+}
+
+header::after {
+content: '';
+display: table;
+clear: both;
+}
+
+main {
+  width: 100%;
+  height: 100px;
+}
+
+button {
+  color: #53453c;;
+  font-family: 'IM Fell Double Pica', serif;
+  border-radius: 32px;
+  font-size: 34px;
+  padding: 20px;
+  background-color:#e7d9d7;
+  box-shadow: 0 8px rgb(73, 73, 73);
+}
+
+button:hover {
+  background-color:#ebc2bc;
+}
+
+button:active {
+  background-color:#ebc2bc;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+#welcome {
+  height: 200px;
+  background-color:#c49790;
+  padding: 50px 0 50px 0;
+  text-align: center;
+}
+
+p {
+  color: #1c110f;
+}

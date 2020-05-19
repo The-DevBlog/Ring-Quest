@@ -7,6 +7,7 @@ var obstacle;
 ctx = document.getElementById('myCanvas').getContext('2d');
 ctx.canvas.width = innerWidth;
 ctx.canvas.height = 625;
+
 // an object to display the rectangle
 rectangle = {
   height: 50,
@@ -17,6 +18,7 @@ rectangle = {
   y: 0,
   y_vel: 0
 };
+
 obstacle = { // obstacle rectangle to jump over
   height: 100,
   width: 100,
@@ -28,7 +30,7 @@ function Obstacle(height, width, x, y, color) {
   this.height = height;
   this.width = width;
   this.x = x;
-  this.y = y;
+  this.y = y - this.height;
   this.color = color;
 
   ctx.beginPath();
@@ -38,22 +40,23 @@ function Obstacle(height, width, x, y, color) {
   // obstacle collision detection
   // first IF statement detects collision with LEFT side of obstacle
   if (rectangle.x > this.x - rectangle.width &&
-    rectangle.y > ctx.canvas.height - this.height &&
+    rectangle.y > this.y &&
     rectangle.x < this.x) {
     rectangle.x = this.x - rectangle.width;
-    // second IF statement to detect collision with RIGHT side of obstacle
-  } else if (rectangle.x < this.x + rectangle.width + rectangle.width &&
-    rectangle.y > ctx.canvas.height - this.height &&
+    // second IF statement detect collision with RIGHT side of obstacle
+  } else if (rectangle.x < this.x + this.width &&
+    rectangle.y > this.y &&
     rectangle.x > this.x + rectangle.width) {
-    rectangle.x = this.x + rectangle.width + rectangle.width;
+    rectangle.x = this.x + this.width;
     // third IF statement detects collision with TOP of obstacle (and would allow character/box to "stand" on top), and re-sets "jump" ability to FALSE to allow player to jump again. Also re-sets y-velocity to avoid "rocket jump" glitch.
-  } else if (rectangle.y > ctx.canvas.height - this.height - rectangle.height &&
+  } else if (rectangle.y > this.y - rectangle.height &&
     rectangle.x > this.x - rectangle.width &&
     rectangle.x < this.x + this.width) {
-    rectangle.y = ctx.canvas.height - this.width - rectangle.width;
+    rectangle.y = this.y - rectangle.height;
     rectangle.jumping = false;
     rectangle.y_vel = 10;
   }
+  // else if (rectangle.y > ctx.canvas.height - this.y)
 }
 
 // object to control the keyboard input
@@ -66,14 +69,14 @@ controller = {
     var keyState = (event.type == 'keydown') ? true : false;
     // switch statement to determine which key is being pressed. This could have been done with an 'if.. else if' statement, but the switch statement is a much cleaner way to handle this. Also, each key on a keyboard has a specific 'keyCode' attached to it. keyCode is a built in JavaScript variable.
     switch (event.keyCode) {
-    case 37: // left arrow key
-      controller.left = keyState;
-      break;
-    case 32: // space bar key
-      controller.space = keyState;
-      break;
-    case 39: // right arrow key
-      controller.right = keyState;
+      case 37: // left arrow key
+        controller.left = keyState;
+        break;
+      case 32: // space bar key
+        controller.space = keyState;
+        break;
+      case 39: // right arrow key
+        controller.right = keyState;
     }
   }
 };
@@ -132,20 +135,30 @@ loop = function () {
     rectangle.jumping = false;
     rectangle.y_vel = 10;
   }
+
   // draw background
   ctx.fillStyle = 'lightblue';
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
   // draw rectangle
   ctx.fillStyle = 'yellow';
   ctx.beginPath();
   ctx.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-  //  draw obstacle
+
+  // draw obstacle
   ctx.fillStyle = 'brown';
   ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
 
-  new Obstacle(100, 100, 500, 525, 'green');
-  new Obstacle(100, 100, 900, 525, 'black');
+  // var xCoord = 0
+  // for (var i = 0; i < 10; i++) {
+  //   new Obstacle(100, ctx.canvas.width * 1, xCoord, ctx.canvas.height, 'green');
+  //   xCoord += (ctx.canvas.width * .1);
+  // }
 
+  new Obstacle(100, 100, 100, ctx.canvas.height, 'blue');
+  new Obstacle(50, 200, 600, 475, 'orange');
+  new Obstacle(200, 100, 500, ctx.canvas.height, 'green');
+  new Obstacle(100, 100, 900, ctx.canvas.height, 'black');
 
   // update browser when it is ready to draw again
   window.requestAnimationFrame(loop);
@@ -153,4 +166,6 @@ loop = function () {
 // Event listeners for key presses
 window.addEventListener('keydown', controller.keyListener);
 window.addEventListener('keyup', controller.keyListener);
+
+// initiate loop
 window.requestAnimationFrame(loop);

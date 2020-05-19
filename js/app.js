@@ -135,17 +135,25 @@ loop = function () {
     rectangle.jumping = false;
     rectangle.y_vel = 10;
   }
+
   // draw background
   ctx.fillStyle = 'lightblue';
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
   // draw rectangle
   ctx.fillStyle = 'yellow';
   ctx.beginPath();
   ctx.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-  //  draw obstacle
+
+  // draw obstacle
   ctx.fillStyle = 'brown';
   ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
 
+  // var xCoord = 0
+  // for (var i = 0; i < 10; i++) {
+  //   new Obstacle(100, ctx.canvas.width * 1, xCoord, ctx.canvas.height, 'green');
+  //   xCoord += (ctx.canvas.width * .1);
+  // }
 
   new Obstacle(100, 100, 100, ctx.canvas.height, 'blue');
   new Obstacle(50, 200, 600, 475, 'orange');

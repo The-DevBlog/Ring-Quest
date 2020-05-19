@@ -40,7 +40,6 @@ nav li {
 nav a {
   color: rgb(55, 58, 58);
   text-decoration: none;
-  text-transform: uppercase;
 }
 
 nav :hover {
@@ -48,8 +47,12 @@ nav :hover {
 }
 
 header {
+  overflow: hidden;
   padding-left: 30px;
   background-color:#c5b6ba;
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
 
 header::after {
@@ -92,4 +95,8 @@ button:active {
 
 p {
   color: #1c110f;
+}
+
+main {
+  margin-top: 90px;
 }

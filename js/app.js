@@ -115,3 +115,90 @@ loop = function () {
 window.addEventListener('keydown', controller.keyListener);
 window.addEventListener('keyup', controller.keyListener);
 window.requestAnimationFrame(loop);
+
+// Display canvas context, draw tile buffer here.
+const DISPLAY = document.querySelector('canvas').getContext('2d', {alpha:false, desynchronized:false});
+// Tile buffer canvas context, draw individual tiles here.
+const BUFFER = document.createElement('canvas').getContext('2d', {alpha:false, desynchronized:true});
+
+// width and height for every tile
+const TILE_SIZE = 16;
+
+// The TILES object contains "tile" objects with keys that correspond to map values. Each tile has an *object color**
+
+const TILES = {
+  0: ,
+  1: { floorpath }, 
+  2: { platform },
+  3: { color: 'TKTKTK' }, ring of power
+}
+
+// Holds info about the map, including tile indices array
+const MAP = {
+  columns: 16,
+  rows: 14,
+  height: 14 * TILE_SIZE,
+  width: 16 * TILE_SIZE,
+}
+
+// Used during image scaling to ensure rendered image isn't skewed
+width_height_ratio: 16 / 14;
+
+// tiles in this array correspond to those in TILES object
+  tiles: [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1,
+    1, 
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,]
+  };
+
+  // Renders tiles to buffer
+    funtion renderTiles() {
+      var map_index = 0;
+
+      // increment by actual TILE_SIZE to avoid multiplying on every interation
+      for(var top = 0; top < MAP.height; top += TILE_SIZE) {
+        for(var left = 0; left < MAP.width; left += TILE_SIZE) {
+          var tile_value = MAP.tiles[map_index];
+          var tile = TILES[tile_value];
+          // Does buffer fillStyle change which kinds of tiles I can use?
+          BUFFER.fillStyle = tile.color;
+
+          BUFFER.fillRect(left, top, TILE_SIZE, TILE_SIZE);
+          map_index ++;
+        }
+      }
+    }
+
+    // Render the buffer to the display. If this example required a game loop or repeated draws, this function allows you to only make one drawImage call here instead of 1 call for every tile.
+    function renderDisplay() {
+      DISPLAY.drawImage(BUFFER.canvas, 0, 0);
+    }
+
+    // This function resizes the CSS width and height of the DISPLAY canvas to force it to scale to fit the window.
+    function resize(event) {
+      var height = document.documentElement.clientHeight;
+      var width = document.documentElement.clientWidth;
+
+      // Makes sure the DISPLAY canvas is resized in a way that maintains the MAP's width/height ratio.
+      if(width / height < MAP.width_height_ratio) height = Math.floor(width / MAP.width_height_ratio);
+      else width = Math.floor(height * MAP.width_height_ratio);
+
+      DISPLAY.canvas.style.height = height + 'px';
+      DISPLAY.canvas.style.width = width + 'px';
+
+      // renderDisplay();
+    }
+
+    
+

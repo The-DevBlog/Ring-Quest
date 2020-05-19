@@ -126,11 +126,16 @@ const TILE_SIZE = 16;
 
 // The TILES object contains "tile" objects with keys that correspond to map values. Each tile has an *object color**
 
+// 0: plainbackground
+// 1: floorpath
+// 2: platform
+// 3: ringofpower
+
 const TILES = {
-  0: ,
-  1: { floorpath }, 
-  2: { platform },
-  3: { color: 'TKTKTK' }, ring of power
+  0: { color: '#552828' }, 
+  1: { color: '#6B6B6B' }, 
+  2: { color: '#008000' },
+  3: { color: '#FFD700' },
 }
 
 // Holds info about the map, including tile indices array
@@ -146,20 +151,20 @@ width_height_ratio: 16 / 14;
 
 // tiles in this array correspond to those in TILES object
   tiles: [
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1,
+    0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    1,
-    1, 
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,]
+    0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 2, 2,
+    0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 2, 2, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
+    0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
+    0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 3]
   };
 
   // Renders tiles to buffer
@@ -200,5 +205,16 @@ width_height_ratio: 16 / 14;
       // renderDisplay();
     }
 
-    
 
+
+// Setting the initial height and width of the BUFFER and DISPLAY canvases.
+BUFFER.canvas.width = DISPLAY.canvas.width = MAP.width;
+BUFFER.canvas.height = DISPLAY.canvas.height = MAP.height;
+BUFFER.imageSmoothingEnabled = DISPLAY.imageSmoothingEnabled = false;
+
+renderTiles();
+
+window.addEventListener('resize', resize);
+
+resize();
+renderDisplay();

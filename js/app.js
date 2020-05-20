@@ -92,7 +92,7 @@ function Obstacle(height, width, x, y, color) {
   //console.log('checking for COLLISION', character);
 
   // OBSTACLE COLLISION DETECTION - Note: Collision properties are a part of the "Obstacle" constructor, and therefore it is the Obstacles that check for character collision
- 
+
   // Variables to determine generally which "side" of an obstacle a character is on - with small margins added/subtracted to serve as measures of "forgiveness" to allow collision properties some leeway to trigger
   var isCharacterOnLeft = character.x + character.width < this.x + 20;
   var isCharacterOnRight = character.x > this.x + this.width - 20;
@@ -105,38 +105,38 @@ function Obstacle(height, width, x, y, color) {
   var isBottomOfCharacterOverlappingTopOfObstacle = character.y + character.height > this.y; // top side collision variable - determines if actual collision is taking place between character/obstacle
   var isTopOfCharacterOverlappingBottomOfObstacle = character.y < this.y + this.height; // bottom side collision variable - determines if actual collision is taking place between character/obstacle
 
-// Boolean variable to ensure that character is colliding with obstacle on obstacle left within the "height" range of obstacle
+  // Boolean variable to ensure that character is colliding with obstacle on obstacle left within the "height" range of obstacle
   var isCollidingFromLeft = isRightSideOfCharacterOverlappingLeftSideOfObstacle &&
     isTopOfCharacterOverlappingBottomOfObstacle &&
     isBottomOfCharacterOverlappingTopOfObstacle &&
     isCharacterOnLeft;
 
-// Boolean variable to ensure that character is colliding with obstacle on obstacle right within the "height" range of obstacle
+  // Boolean variable to ensure that character is colliding with obstacle on obstacle right within the "height" range of obstacle
   var isCollidingFromRight = isLeftSideOfCharacterOverlappingRightSideOfObstacle &&
     isTopOfCharacterOverlappingBottomOfObstacle &&
     isBottomOfCharacterOverlappingTopOfObstacle &&
     isCharacterOnRight;
 
-// Boolean variable to ensure that character is colliding with obstacle on obstacle top within the "width" range of obstacle
+  // Boolean variable to ensure that character is colliding with obstacle on obstacle top within the "width" range of obstacle
   var isCollidingFromTop = isRightSideOfCharacterOverlappingLeftSideOfObstacle &&
     isLeftSideOfCharacterOverlappingRightSideOfObstacle &&
     isBottomOfCharacterOverlappingTopOfObstacle &&
     isCharacterAbove;
 
-// Boolean variable to ensure that character is colliding with obstacle on obstacle bottom within the "width" range of obstacle
+  // Boolean variable to ensure that character is colliding with obstacle on obstacle bottom within the "width" range of obstacle
   var isCollidingFromBottom = isTopOfCharacterOverlappingBottomOfObstacle &&
     isCharacterBelow &&
     isLeftSideOfCharacterOverlappingRightSideOfObstacle &&
     isRightSideOfCharacterOverlappingLeftSideOfObstacle;
 
- // first IF statement detects collision with LEFT side of obstacle is TRUE
+  // first IF statement detects collision with LEFT side of obstacle is TRUE
   if (isCollidingFromLeft) {
     //console.log('left collision', character, this);
     //debugger;
     character.x = this.x - character.width; // set it back to LEFT of obstacle
     character.x_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
 
-  // second IF statement detects collision with RIGHT side of obstacle is TRUE
+    // second IF statement detects collision with RIGHT side of obstacle is TRUE
   } else if (isCollidingFromRight) {
     //console.log('right collision', character, this);
     //debugger;
@@ -150,11 +150,11 @@ function Obstacle(height, width, x, y, color) {
     character.y = this.y - character.height;
     character.jumping = false;
     character.y_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
-   
+
     // fourth IF statement detects collision with BOTTOM side of obstacle
   } else if (isCollidingFromBottom) {
-      //console.log('bottom collision', character, this);
-      //debugger;
+    //console.log('bottom collision', character, this);
+    //debugger;
     character.y = this.y + this.height;
     character.y_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
   }
@@ -197,7 +197,7 @@ loop = function () {
     character.jumping = true;
     //controller.space = false;
   }
-  
+
   // if character is jumping, display jumping sprite set
   if (character.y_vel < 0) {
     character.animate.change(spriteSheet.frameSet[3]);
@@ -211,7 +211,7 @@ loop = function () {
   // controls left movement
   if (controller.left) {
     character.animate.change(spriteSheet.frameSet[2], 15); // animate sprite with left-facing movement frames
-    character.x_vel -= 0.5;  // negative x value to move left
+    character.x_vel -= 0.5; // negative x value to move left
   }
 
   // controls right movement
@@ -246,26 +246,17 @@ loop = function () {
   renderTiles();
   resize();
 
-  ctx.fillStyle = 'lightblue';
-  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-    // Invoke function to draw the player character
+  // Invoke function to draw the player character
   drawPlayer();
 
   // Invoke function to draw the floor
   drawFloor('green');
 
-  new Obstacle(100, 100, 300, 525, 'blue');
-  new Obstacle(100, 100, 700, 325, 'red');
-  new Obstacle(100, 100, 900, 525, 'black');
-  new Obstacle(100, 100, 1000, 325, 'green');
-  new Obstacle(100, 100, 1400, 225, 'pink');
-
- // update animation
- character.animate.update();
+  // update animation
+  character.animate.update();
 
   // update browser when it is ready to draw again
- window.requestAnimationFrame(loop);
+  window.requestAnimationFrame(loop);
 };
 
 // draw the player to the screen
@@ -290,20 +281,29 @@ spriteSheet.image.addEventListener('load', function (event) {
   window.requestAnimationFrame(loop);
 });
 
-spriteSheet.image.src="../sprites/character75x75.png"
+spriteSheet.image.src = "../sprites/character75x75.png"
 
 // Event listeners for key presses
 window.addEventListener('keydown', controller.keyListener);
 window.addEventListener('keyup', controller.keyListener);
 
 // width and height for every tile
-var TILE_SIZE = 48;
+var TILE_SIZE = 100;
 
 var TILES = {
-  0: { color: '#552828' }, // 0: plainBackground
-  1: { color: '#6B6B6B' }, // 1: floorpath
-  2: { color: '#008000' }, // 2: platform
-  3: { color: '#FFD700' }, // 3: ringOfPower
+  0: {
+    color: '#552828'
+  }, // 0: plainBackground
+  1: {
+    color: '#6B6B6B'
+  }, // 1: floorpath
+  // 2: {
+  //   color: '#008000'
+  // }, // 2: platform
+  2: new Obstacle(),
+  3: {
+    color: '#FFD700'
+  }, // 3: ringOfPower
 };
 
 // Holds info about the map, including tile indices array
@@ -319,38 +319,44 @@ var MAP = {
 
   // tiles in this array correspond to those in TILES object
   tiles: [
-  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-  0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1,
-  0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
-  0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 2, 2,
-  0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 2, 2, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
-  0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 2, 0, 0,
-  0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
-  0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3,
-  1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1]
-
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1,
+    0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 2, 2,
+    0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 2, 2, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
+    0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
+    0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3,
+    1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1
+  ]
 };
-
 
 // Renders tiles to buffer
 function renderTiles() {
   var map_index = 0;
 
   // increment by actual TILE_SIZE to avoid multiplying on every interation
-  for(var top = 0; top < MAP.height; top += TILE_SIZE) {
-    for(var left = 0; left < MAP.width; left += TILE_SIZE) {
+  for (var top = 0; top < MAP.height; top += TILE_SIZE) {
+    for (var left = 0; left < MAP.width; left += TILE_SIZE) {
+
       var tile_value = MAP.tiles[map_index];
       var tile = TILES[tile_value];
-      // Does buffer fillStyle change which kinds of tiles I can use?
-      ctx.fillStyle = tile.color;
 
-      ctx.fillRect(left, top, TILE_SIZE, TILE_SIZE);
-      map_index ++;
+      if (MAP.tiles[map_index] === 2) {
+        new Obstacle(TILE_SIZE, TILE_SIZE, left, top, 'green');
+      } else {
+
+        ctx.fillStyle = tile.color;
+        ctx.fillRect(left, top, TILE_SIZE, TILE_SIZE);
+      }
+      // Does buffer fillStyle change which kinds of tiles I can use?
+      map_index++;
+
     }
   }
 }
@@ -361,7 +367,7 @@ function resize(event) {
   var width = ctx.canvas.width;
 
   // Makes sure the DISPLAY canvas is resized in a way that maintains the MAP's width/height ratio.
-  if(width / height < MAP.width_height_ratio) height = Math.floor(width / MAP.width_height_ratio);
+  if (width / height < MAP.width_height_ratio) height = Math.floor(width / MAP.width_height_ratio);
   else width = Math.floor(height * MAP.width_height_ratio);
 
   // ctx.canvas.style.height = height + 'px';

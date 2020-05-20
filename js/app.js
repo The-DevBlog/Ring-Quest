@@ -20,6 +20,39 @@ var Animate = function (delay, frameSet) {
   this.frameSet = frameSet;
 };
 
+Animate.prototype = {
+  // change which frameset to display
+  change: function (frameSet, delay = 15) {
+    // if the current frameset changes, then change the following
+    // properties
+    if (this.frameSet !== frameSet) {
+      this.count = 0;
+      this.delay = delay;
+      this.frameSet = frameSet;
+      this.frameIdx = 0;
+      this.frame = this.frameSet[this.frameIdx];
+    }
+  },
+  // invoke on every game cycle
+  update: function () {
+    this.count++; // tracks game engine iterations
+    // reset the count if it is equal to or greater than the delay, this enables the delay between frames
+    if (this.count >= this.delay) {
+      this.count = 0;
+      // this.frameIdx = (this.frameIdx === this.frameSet.length - 1) ? 0 : this.frameIdx + 1;
+      // NOTE - the following if statement is the same as the above statement
+      if (this.frameIdx === this.frameSet.length - 1) {
+        this.frameIdx = 0;
+      } else if (this.frameSet.length === 1) {
+        this.frameIdx = 0;
+      } else {
+        this.frameIdx += 1;
+      }
+      this.frame = this.frameSet[this.frameIdx];
+    }
+  }
+};
+
 
 
 

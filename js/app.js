@@ -195,17 +195,32 @@ loop = function () {
     // prevents character from jumping again if already jumping
     character.jumping = true;
   }
+  
+  // if character is jumping, display jumping sprite set
+  // if (character.y_vel < 0) {
+  //   character.animate.change(spriteSheet.frameSet[3]);
+  // }
+
+  // if character is standing still, display standing still sprite set
+  if (!controller.left && !controller.right && character.jumping === false) {
+    character.animate.change(spriteSheet.frameSet[0], 30);
+  }
+
   // controls left movement
   if (controller.left) {
+    character.animate.change(spriteSheet.frameSet[2], 15); // animate sprite with left-facing movement frames
     character.x_vel -= 1; // negative x value to move left
   }
+
   // controls right movement
   if (controller.right) {
+    character.animate.change(spriteSheet.frameSet[1], 15); // animate sprite with right-facing movement frames
     character.x_vel += 1; // positive x value to move right
   }
   character.y_vel += 1.5; // creates gravity on each frame
   character.x += character.x_vel; // add velocity to x position
   character.y += character.y_vel; // add velocity to y position
+
   // friction: this slows down the character until it is at a complete stop
   character.x_vel *= 0.9;
   character.y_vel *= 0.9;

@@ -1,8 +1,12 @@
 'use strict';
 var ctx;
 var controller;
-var player;
+var character;
 var loop;
+var spriteSheet;
+var spriteSize = 100;
+var drawPlayer;
+
 ctx = document.getElementById('myCanvas').getContext('2d');
 ctx.canvas.width = innerWidth;
 ctx.canvas.height = 725;
@@ -12,8 +16,8 @@ ctx.canvas.height = 725;
 
 
 
-// an object to display the player
-player = { // player sprite aka (RECTANGLE)
+// an object to display the character
+character = { // character sprite aka (RECTANGLE)
   height: 50,
   width: 50,
   jumping: true, // true if jumping, false if not
@@ -39,74 +43,74 @@ function Obstacle(height, width, x, y, color) {
   ctx.fillRect(this.x, this.y, this.width, this.height);
 
   //debugger;
-  //console.log('checking for COLLISION', player);
+  //console.log('checking for COLLISION', character);
 
-  // OBSTACLE COLLISION DETECTION - Note: Collision properties are a part of the "Obstacle" constructor, and therefore it is the Obstacles that check for player collision
+  // OBSTACLE COLLISION DETECTION - Note: Collision properties are a part of the "Obstacle" constructor, and therefore it is the Obstacles that check for character collision
  
-  // Variables to determine generally which "side" of an obstacle a player is on - with small margins added/subtracted to serve as measures of "forgiveness" to allow collision properties some leeway to trigger
-  var isPlayerOnLeft = player.x + player.width < this.x + 10;
-  var isPlayerOnRight = player.x > this.x + this.width - 10;
-  var isPlayerAbove = player.y + player.height < this.y + 15;
-  var isPlayerBelow = player.y > this.height + this.y - 10;
+  // Variables to determine generally which "side" of an obstacle a character is on - with small margins added/subtracted to serve as measures of "forgiveness" to allow collision properties some leeway to trigger
+  var ischaracterOnLeft = character.x + character.width < this.x + 10;
+  var ischaracterOnRight = character.x > this.x + this.width - 10;
+  var ischaracterAbove = character.y + character.height < this.y + 15;
+  var ischaracterBelow = character.y > this.height + this.y - 10;
 
-  // Variables to determine if actual "collision"/overlap of obstacle/player boundaries takes place
-  var isRightSideOfPlayerOverlappingLeftSideOfObstacle = player.x + player.width > this.x; // left side collision variable - determines if actual collision is taking place between player/obstacle
-  var isLeftSideOfPlayerOverlappingRightSideOfObstacle = player.x - player.width < this.x + this.width - player.width; // right side collision variable - determines if actual collision is taking place between player/obstacle
-  var isBottomOfPlayerOverlappingTopOfObstacle = player.y + player.height > this.y; // top side collision variable - determines if actual collision is taking place between player/obstacle
-  var isTopOfPlayerOverlappingBottomOfObstacle = player.y < this.y + this.height; // bottom side collision variable - determines if actual collision is taking place between player/obstacle
+  // Variables to determine if actual "collision"/overlap of obstacle/character boundaries takes place
+  var isRightSideOfcharacterOverlappingLeftSideOfObstacle = character.x + character.width > this.x; // left side collision variable - determines if actual collision is taking place between character/obstacle
+  var isLeftSideOfcharacterOverlappingRightSideOfObstacle = character.x - character.width < this.x + this.width - character.width; // right side collision variable - determines if actual collision is taking place between character/obstacle
+  var isBottomOfcharacterOverlappingTopOfObstacle = character.y + character.height > this.y; // top side collision variable - determines if actual collision is taking place between character/obstacle
+  var isTopOfcharacterOverlappingBottomOfObstacle = character.y < this.y + this.height; // bottom side collision variable - determines if actual collision is taking place between character/obstacle
 
-// Boolean variable to ensure that player is colliding with obstacle on obstacle left within the "height" range of obstacle
-  var isCollidingFromLeft = isRightSideOfPlayerOverlappingLeftSideOfObstacle &&
-    isTopOfPlayerOverlappingBottomOfObstacle &&
-    isBottomOfPlayerOverlappingTopOfObstacle &&
-    isPlayerOnLeft;
+// Boolean variable to ensure that character is colliding with obstacle on obstacle left within the "height" range of obstacle
+  var isCollidingFromLeft = isRightSideOfcharacterOverlappingLeftSideOfObstacle &&
+    isTopOfcharacterOverlappingBottomOfObstacle &&
+    isBottomOfcharacterOverlappingTopOfObstacle &&
+    ischaracterOnLeft;
 
-// Boolean variable to ensure that player is colliding with obstacle on obstacle right within the "height" range of obstacle
-  var isCollidingFromRight = isLeftSideOfPlayerOverlappingRightSideOfObstacle &&
-    isTopOfPlayerOverlappingBottomOfObstacle &&
-    isBottomOfPlayerOverlappingTopOfObstacle &&
-    isPlayerOnRight;
+// Boolean variable to ensure that character is colliding with obstacle on obstacle right within the "height" range of obstacle
+  var isCollidingFromRight = isLeftSideOfcharacterOverlappingRightSideOfObstacle &&
+    isTopOfcharacterOverlappingBottomOfObstacle &&
+    isBottomOfcharacterOverlappingTopOfObstacle &&
+    ischaracterOnRight;
 
-// Boolean variable to ensure that player is colliding with obstacle on obstacle top within the "width" range of obstacle
-  var isCollidingFromTop = isRightSideOfPlayerOverlappingLeftSideOfObstacle &&
-    isLeftSideOfPlayerOverlappingRightSideOfObstacle &&
-    isBottomOfPlayerOverlappingTopOfObstacle &&
-    isPlayerAbove;
+// Boolean variable to ensure that character is colliding with obstacle on obstacle top within the "width" range of obstacle
+  var isCollidingFromTop = isRightSideOfcharacterOverlappingLeftSideOfObstacle &&
+    isLeftSideOfcharacterOverlappingRightSideOfObstacle &&
+    isBottomOfcharacterOverlappingTopOfObstacle &&
+    ischaracterAbove;
 
-// Boolean variable to ensure that player is colliding with obstacle on obstacle bottom within the "width" range of obstacle
-  var isCollidingFromBottom = isTopOfPlayerOverlappingBottomOfObstacle &&
-    isPlayerBelow &&
-    isLeftSideOfPlayerOverlappingRightSideOfObstacle &&
-    isRightSideOfPlayerOverlappingLeftSideOfObstacle;
+// Boolean variable to ensure that character is colliding with obstacle on obstacle bottom within the "width" range of obstacle
+  var isCollidingFromBottom = isTopOfcharacterOverlappingBottomOfObstacle &&
+    ischaracterBelow &&
+    isLeftSideOfcharacterOverlappingRightSideOfObstacle &&
+    isRightSideOfcharacterOverlappingLeftSideOfObstacle;
 
  // first IF statement detects collision with LEFT side of obstacle is TRUE
   if (isCollidingFromLeft) {
-    console.log('left collision', player, this);
+    console.log('left collision', character, this);
     //debugger;
-    player.x = this.x - player.width; // set it back to LEFT of obstacle
-    player.x_vel = 0; // reduce velocity to zero to ensure player stops immediately without sinking into obstacle object
+    character.x = this.x - character.width; // set it back to LEFT of obstacle
+    character.x_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
 
   // second IF statement detects collision with RIGHT side of obstacle is TRUE
   } else if (isCollidingFromRight) {
-    console.log('right collision', player, this);
+    console.log('right collision', character, this);
     //debugger;
-    player.x = this.x + this.width;
-    player.x_vel = 0; // reduce velocity to zero to ensure player stops immediately without sinking into obstacle object
+    character.x = this.x + this.width;
+    character.x_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
 
-    // third IF statement detects collision with TOP side of obstacle (and allows player to "stand" on top of obstacles), and re-sets "jump" ability to FALSE to allow player to jump again. Also re-sets y-velocity to avoid "rocket jump" glitch.
+    // third IF statement detects collision with TOP side of obstacle (and allows character to "stand" on top of obstacles), and re-sets "jump" ability to FALSE to allow character to jump again. Also re-sets y-velocity to avoid "rocket jump" glitch.
   } else if (isCollidingFromTop) {
-    console.log('top collision', player, this);
+    console.log('top collision', character, this);
     //debugger;
-    player.y = this.y - player.height;
-    player.jumping = false;
-    player.y_vel = 0; // reduce velocity to zero to ensure player stops immediately without sinking into obstacle object
+    character.y = this.y - character.height;
+    character.jumping = false;
+    character.y_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
    
     // fourth IF statement detects collision with BOTTOM side of obstacle
   } else if (isCollidingFromBottom) {
-      console.log('bottom collision', player, this);
+      console.log('bottom collision', character, this);
       //debugger;
-    player.y = this.y + this.height;
-    player.y_vel = 0; // reduce velocity to zero to ensure player stops immediately without sinking into obstacle object
+    character.y = this.y + this.height;
+    character.y_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
   }
 }
 
@@ -136,40 +140,40 @@ controller = {
 
 loop = function () {
   // controls jumping movement
-  if (controller.space && player.jumping == false) {
-    // negative y value will allow player to move up
-    player.y_vel -= 60;
-    // prevents player from jumping again if already jumping
-    player.jumping = true;
+  if (controller.space && character.jumping == false) {
+    // negative y value will allow character to move up
+    character.y_vel -= 60;
+    // prevents character from jumping again if already jumping
+    character.jumping = true;
   }
   // controls left movement
   if (controller.left) {
-    player.x_vel -= 1; // negative x value to move left
+    character.x_vel -= 1; // negative x value to move left
   }
   // controls right movement
   if (controller.right) {
-    player.x_vel += 1; // positive x value to move right
+    character.x_vel += 1; // positive x value to move right
   }
-  player.y_vel += 1.5; // creates gravity on each frame
-  player.x += player.x_vel; // add velocity to x position
-  player.y += player.y_vel; // add velocity to y position
-  // friction: this slows down the player until it is at a complete stop
-  player.x_vel *= 0.9;
-  player.y_vel *= 0.9;
+  character.y_vel += 1.5; // creates gravity on each frame
+  character.x += character.x_vel; // add velocity to x position
+  character.y += character.y_vel; // add velocity to y position
+  // friction: this slows down the character until it is at a complete stop
+  character.x_vel *= 0.9;
+  character.y_vel *= 0.9;
 
   // collision detection
-  // if player is falling below the floor
+  // if character is falling below the floor
   var groundHeight = ctx.canvas.height - 50; // new variable
-  if (player.y > groundHeight - player.height) {
-    player.jumping = false; // allow to jump again
-    player.y = groundHeight; // dont fall past the floor
-    player.y_vel = 0; // stop if hits the floor
+  if (character.y > groundHeight - character.height) {
+    character.jumping = false; // allow to jump again
+    character.y = groundHeight; // dont fall past the floor
+    character.y_vel = 0; // stop if hits the floor
   }
-  // if player is going past the left or right boundaries of the window
-  if (player.x < 0) {
-    player.x = 0;
-  } else if (player.x > ctx.canvas.width - player.width) {
-    player.x = ctx.canvas.width - player.width;
+  // if character is going past the left or right boundaries of the window
+  if (character.x < 0) {
+    character.x = 0;
+  } else if (character.x > ctx.canvas.width - character.width) {
+    character.x = ctx.canvas.width - character.width;
   }
 
 
@@ -177,10 +181,10 @@ loop = function () {
   ctx.fillStyle = 'lightblue';
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-  // draw player
+  // draw character
   ctx.fillStyle = 'yellow';
   ctx.beginPath();
-  ctx.fillRect(player.x, player.y, player.width, player.height);
+  ctx.fillRect(character.x, character.y, character.width, character.height);
 
  /* var xCoord = 0
   for (var i = 0; i < 10; i++) {
@@ -209,10 +213,10 @@ window.requestAnimationFrame(loop);
 
 //TODO: Implement some kind of "parabola" for jumps to avoid making them overpowered -i.e., jump decay or "Delta-T"
 
-//TODO: Fix glitch in which player "snaps" to floor upon reaching a certain distance to the ground
+//TODO: Fix glitch in which character "snaps" to floor upon reaching a certain distance to the ground
 
-//TODO: Fix glitch where player snaps to top corners of obstacles briefly upon sliding off the top
+//TODO: Fix glitch where character snaps to top corners of obstacles briefly upon sliding off the top
 
-//TODO: Fix glitch where "jump velocity" of less than 60 renders player unable to jump
+//TODO: Fix glitch where "jump velocity" of less than 60 renders character unable to jump
 
 //TODO: Remove collision console log commands and debugger lines once finished

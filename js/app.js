@@ -45,7 +45,7 @@ controller = {
   }
 };
 loop = function () {
-  // controls jumping movement 
+  // controls jumping movementvar
   if (controller.space && rectangle.jumping == false) {
     // negative y value will allow rectangle to move up
     rectangle.y_vel -= 60;
@@ -99,8 +99,10 @@ loop = function () {
     rectangle.y_vel = 10;
   }
   // draw background
-  ctx.fillStyle = 'lightblue';
-  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  // ctx.fillStyle = 'lightblue';
+  // ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  renderTiles();
+  resize();
   // draw rectangle
   ctx.fillStyle = 'yellow';
   ctx.beginPath();
@@ -116,13 +118,16 @@ window.addEventListener('keydown', controller.keyListener);
 window.addEventListener('keyup', controller.keyListener);
 window.requestAnimationFrame(loop);
 
+
+
+
 // Display canvas context, draw tile buffer here.
-const DISPLAY = document.querySelector('canvas').getContext('2d', {alpha:false, desynchronized:false});
+// var DISPLAY = document.querySelector('canvas').getContext('2d', {alpha:false, desynchronized:false});
 // Tile buffer canvas context, draw individual tiles here.
-const BUFFER = document.createElement('canvas').getContext('2d', {alpha:false, desynchronized:true});
+// var BUFFER = document.createElement('canvas').getContext('2d', {alpha:false, desynchronized:true});
 
 // width and height for every tile
-const TILE_SIZE = 16;
+var TILE_SIZE = 16;
 
 // The TILES object contains "tile" objects with keys that correspond to map values. Each tile has an *object color**
 
@@ -131,90 +136,93 @@ const TILE_SIZE = 16;
 // 2: platform
 // 3: ringofpower
 
-const TILES = {
-  0: { color: '#552828' }, 
-  1: { color: '#6B6B6B' }, 
+var TILES = {
+  0: { color: '#552828' },
+  1: { color: '#6B6B6B' },
   2: { color: '#008000' },
   3: { color: '#FFD700' },
-}
+};
 
 // Holds info about the map, including tile indices array
-const MAP = {
+var MAP = {
   columns: 16,
   rows: 14,
   height: 14 * TILE_SIZE,
   width: 16 * TILE_SIZE,
+
+
+  // Used during image scaling to ensure rendered image isn't skewed
+  width_height_ratio: 16 / 14,
+
+  // tiles in this array correspond to those in TILES object
+  tiles: [
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1,
+  0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
+  0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 2, 2,
+  0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 2, 2, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
+  0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 2, 0, 0,
+  0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
+  0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3,
+  1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1]
+
+};
+
+
+// Renders tiles to buffer
+
+function renderTiles() {
+  var map_index = 0;
+
+  // increment by actual TILE_SIZE to avoid multiplying on every interation
+  for(var top = 0; top < MAP.height; top += TILE_SIZE) {
+    for(var left = 0; left < MAP.width; left += TILE_SIZE) {
+      var tile_value = MAP.tiles[map_index];
+      var tile = TILES[tile_value];
+      // Does buffer fillStyle change which kinds of tiles I can use?
+      ctx.fillStyle = tile.color;
+
+      ctx.fillRect(left, top, TILE_SIZE, TILE_SIZE);
+      map_index ++;
+    }
+  }
 }
 
-// Used during image scaling to ensure rendered image isn't skewed
-width_height_ratio: 16 / 14;
+// Render the buffer to the display. If this example required a game loop or repeated draws, this function allows you to only make one drawImage call here instead of 1 call for every tile.
+// function renderDisplay() {
+//   ctx.drawImage(BUFFER.canvas, 0, 0);
+// }
 
-// tiles in this array correspond to those in TILES object
-  tiles: [
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1,
-    0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
-    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 2, 2,
-    0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 2, 2, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
-    0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 2, 0, 0,
-    0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
-    0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 3]
-  };
+// This function resizes the CSS width and height of the DISPLAY canvas to force it to scale to fit the window.
+function resize(event) {
+  var height = ctx.canvas.height;
+  var width = ctx.canvas.width;
 
-  // Renders tiles to buffer
-    funtion renderTiles() {
-      var map_index = 0;
+  // Makes sure the DISPLAY canvas is resized in a way that maintains the MAP's width/height ratio.
+  if(width / height < MAP.width_height_ratio) height = Math.floor(width / MAP.width_height_ratio);
+  else width = Math.floor(height * MAP.width_height_ratio);
 
-      // increment by actual TILE_SIZE to avoid multiplying on every interation
-      for(var top = 0; top < MAP.height; top += TILE_SIZE) {
-        for(var left = 0; left < MAP.width; left += TILE_SIZE) {
-          var tile_value = MAP.tiles[map_index];
-          var tile = TILES[tile_value];
-          // Does buffer fillStyle change which kinds of tiles I can use?
-          BUFFER.fillStyle = tile.color;
+  // ctx.canvas.style.height = height + 'px';
+  // ctx.canvas.style.width = width + 'px';
 
-          BUFFER.fillRect(left, top, TILE_SIZE, TILE_SIZE);
-          map_index ++;
-        }
-      }
-    }
-
-    // Render the buffer to the display. If this example required a game loop or repeated draws, this function allows you to only make one drawImage call here instead of 1 call for every tile.
-    function renderDisplay() {
-      DISPLAY.drawImage(BUFFER.canvas, 0, 0);
-    }
-
-    // This function resizes the CSS width and height of the DISPLAY canvas to force it to scale to fit the window.
-    function resize(event) {
-      var height = document.documentElement.clientHeight;
-      var width = document.documentElement.clientWidth;
-
-      // Makes sure the DISPLAY canvas is resized in a way that maintains the MAP's width/height ratio.
-      if(width / height < MAP.width_height_ratio) height = Math.floor(width / MAP.width_height_ratio);
-      else width = Math.floor(height * MAP.width_height_ratio);
-
-      DISPLAY.canvas.style.height = height + 'px';
-      DISPLAY.canvas.style.width = width + 'px';
-
-      // renderDisplay();
-    }
+  // renderDisplay();
+}
 
 
 
 // Setting the initial height and width of the BUFFER and DISPLAY canvases.
-BUFFER.canvas.width = DISPLAY.canvas.width = MAP.width;
-BUFFER.canvas.height = DISPLAY.canvas.height = MAP.height;
-BUFFER.imageSmoothingEnabled = DISPLAY.imageSmoothingEnabled = false;
+ctx.canvas.width = MAP.width;
+ctx.canvas.height = MAP.height;
+ctx.imageSmoothingEnabled = false;
 
-renderTiles();
+// renderTiles();
 
 window.addEventListener('resize', resize);
 
-resize();
-renderDisplay();
+// resize();
+// renderDisplay();

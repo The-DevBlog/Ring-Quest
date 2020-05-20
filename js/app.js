@@ -4,7 +4,7 @@ var controller;
 var character;
 var loop;
 var spriteSheet;
-var spriteSize = 100;
+var spriteSize = 75;
 var drawPlayer;
 
 ctx = document.getElementById('myCanvas').getContext('2d');
@@ -55,8 +55,8 @@ Animate.prototype = {
 
 // an object to display the character
 character = {
-  height: 50,
-  width: 50,
+  height: 75,
+  width: 75,
   jumping: true, // true if jumping, false if not
   x: 150,
   x_vel: 0, // speed left and right
@@ -131,21 +131,21 @@ function Obstacle(height, width, x, y, color) {
 
  // first IF statement detects collision with LEFT side of obstacle is TRUE
   if (isCollidingFromLeft) {
-    console.log('left collision', character, this);
+    //console.log('left collision', character, this);
     //debugger;
     character.x = this.x - character.width; // set it back to LEFT of obstacle
     character.x_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
 
   // second IF statement detects collision with RIGHT side of obstacle is TRUE
   } else if (isCollidingFromRight) {
-    console.log('right collision', character, this);
+    //console.log('right collision', character, this);
     //debugger;
     character.x = this.x + this.width;
     character.x_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
 
     // third IF statement detects collision with TOP side of obstacle (and allows character to "stand" on top of obstacles), and re-sets "jump" ability to FALSE to allow character to jump again. Also re-sets y-velocity to avoid "rocket jump" glitch.
   } else if (isCollidingFromTop) {
-    console.log('top collision', character, this);
+    //console.log('top collision', character, this);
     //debugger;
     character.y = this.y - character.height;
     character.jumping = false;
@@ -153,7 +153,7 @@ function Obstacle(height, width, x, y, color) {
    
     // fourth IF statement detects collision with BOTTOM side of obstacle
   } else if (isCollidingFromBottom) {
-      console.log('bottom collision', character, this);
+      //console.log('bottom collision', character, this);
       //debugger;
     character.y = this.y + this.height;
     character.y_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
@@ -210,9 +210,9 @@ loop = function () {
   character.x_vel *= 0.9;
   character.y_vel *= 0.9;
 
-  // collision detection
+  // collision detection for floor
   // if character is falling below the floor
-  var groundHeight = ctx.canvas.height - 50; // new variable
+  var groundHeight = ctx.canvas.height - character.height; // new variable
   if (character.y > groundHeight - character.height) {
     character.jumping = false; // allow to jump again
     character.y = groundHeight; // dont fall past the floor
@@ -240,6 +240,9 @@ loop = function () {
     new Obstacle(100, ctx.canvas.width * 1, xCoord, ctx.canvas.height, 'green');
     xCoord += (ctx.canvas.width * .1);
   } */
+
+  // Invoke function to draw the player character
+  drawPlayer();
 
   new Obstacle(100, 100, 300, 525, 'blue');
   new Obstacle(100, 100, 700, 325, 'red');

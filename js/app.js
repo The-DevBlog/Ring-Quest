@@ -11,7 +11,14 @@ ctx = document.getElementById('myCanvas').getContext('2d');
 ctx.canvas.width = innerWidth;
 ctx.canvas.height = 725;
 
-
+var Animate = function (delay, frameSet) {
+  this.delay = delay; // delay between frames
+  this.frame = 0;
+  this.frameIdx = 0; // individual frame index
+  this.count = 0;
+  // left walking, right walking and standing still frames
+  this.frameSet = frameSet;
+};
 
 
 

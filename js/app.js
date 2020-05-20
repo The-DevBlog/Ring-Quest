@@ -68,7 +68,16 @@ character = {
   animate: new Animate()
 };
 
-
+// player sprite sheet
+spriteSheet = {
+  frameSet: [
+    [0, 1], // standing still
+    [2, 3], // walking right
+    [4, 5], // walking left
+    [6] // jumping
+  ],
+  image: new Image()
+};
 
 
 

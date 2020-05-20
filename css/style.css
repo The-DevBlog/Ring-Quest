@@ -94,10 +94,16 @@ main {
 }
 
 #welcome {
-  height: 200px;
   background-color:#c49790;
+  height: 200px;
   padding: 50px 0 50px 0;
-  text-align: center;
+  text-align: center; 
+}
+
+#welcome p {
+  color:#53453c;
+  font-family: inherit;
+  font-size: 18px;
 }
 
 p {
@@ -113,11 +119,6 @@ main {
   text-align: center;
   padding-bottom: 30px;;
 }
-
-/* footer {
-  position: absolute;
-  bottom: 0;
-} */
 
 .maker {
   height: 500px;
@@ -141,7 +142,8 @@ main {
 h4 {
   font-size: 22px;
 }
-/* trying to create pop-up */
+
+/* Pop-up Help Tab */
 
 /* pop-up background */
 .modal {
@@ -154,8 +156,6 @@ h4 {
   height: 100%;
   overflow: auto;
 }
-  /* background-color: #e7d9d7;
-
 
 /* pop-up content */
 .modal-content { 
@@ -193,6 +193,53 @@ h4 {
   color: rgb(46, 70, 46);
 }
 
+/* feedback form */
 
+form {
+  font: inherit;
+  color: inherit;
+  width: 90%;
+}
 
+legend {
+  padding: 20px 0 20px 0;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+input[type=text] {
+} 
+
+textarea {
+  width: 60%;
+}
+
+input[type=text], textarea {
+  padding: 12px;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  border: 1px solid #53453c;
+  border-radius: 4px; 
+}
+
+input[type=submit] {
+  color: #53453c;;
+  font-family: 'IM Fell Double Pica', serif;
+  border-radius: 32px;
+  font-size: 20px;
+  padding: 10px;
+  background-color:#e7d9d7;
+  box-shadow: 0 4px rgb(73, 73, 73);
+  display: block;
+}
+
+input[type=submit]:hover {
+  background-color:#ebc2bc;
+}
+
+input[type=submit]:active {
+  background-color:#ebc2bc;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
 

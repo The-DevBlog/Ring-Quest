@@ -1,3 +1,5 @@
+//Pop-up Help Tab
+
 // get the popup
 var popup = document.getElementById('myModal');
 
@@ -22,3 +24,29 @@ window.onclick = function(event) {
     popup.style.display = 'none';
   }
 };
+
+
+//Feedback Form Submission
+function formSubmission() {
+
+  var form = document.getElementById('form');
+
+  function handleFormSubmit(event) {
+    event.preventDefault();
+    var name = event.target.name.value;
+    var email = event.target.email.value;
+    var feedback = event.target.feedback.value;
+    console.log(name + ', ' + email + ', ' + feedback);
+    // I need to check for all feedback in local storage, and add the new feedback to the old ones, and store in local Storage
+    var feedbacks = [name, email, feedback];
+    //adding user data to local storage
+    var stringifiedFeedbacks = JSON.stringify(feedbacks);
+    localStorage.setItem('data', stringifiedFeedbacks);
+    var nameEl = document.getElementById('name');
+    nameEl.value = '';
+  }
+  //event listener
+  form.addEventListener('submit', handleFormSubmit);
+}
+
+formSubmission();

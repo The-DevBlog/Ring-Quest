@@ -94,16 +94,25 @@ function Obstacle(height, width, x, y, color) {
   // OBSTACLE COLLISION DETECTION - Note: Collision properties are a part of the "Obstacle" constructor, and therefore it is the Obstacles that check for character collision
 
   // Variables to determine generally which "side" of an obstacle a character is on - with small margins added/subtracted to serve as measures of "forgiveness" to allow collision properties some leeway to trigger
-  var isCharacterOnLeft = character.x + character.width < this.x + 20;
-  var isCharacterOnRight = character.x > this.x + this.width - 20;
+  var isCharacterOnLeft = character.x + character.width < this.x;
+  var isCharacterOnRight = character.x > this.x + this.width;
   var isCharacterAbove = character.y + character.height < this.y + 20;
-  var isCharacterBelow = character.y > this.height + this.y - 30;
+  var isCharacterBelow = character.y > this.height + this.y - 20;
 
   // Variables to determine if actual "collision"/overlap of obstacle/character boundaries takes place
-  var isRightSideOfCharacterOverlappingLeftSideOfObstacle = character.x + character.width > this.x; // left side collision variable - determines if actual collision is taking place between character/obstacle
-  var isLeftSideOfCharacterOverlappingRightSideOfObstacle = character.x - character.width < this.x + this.width - character.width; // right side collision variable - determines if actual collision is taking place between character/obstacle
-  var isBottomOfCharacterOverlappingTopOfObstacle = character.y + character.height > this.y; // top side collision variable - determines if actual collision is taking place between character/obstacle
-  var isTopOfCharacterOverlappingBottomOfObstacle = character.y < this.y + this.height; // bottom side collision variable - determines if actual collision is taking place between character/obstacle
+
+  // left side collision variable - determines if actual collision is taking place between character/obstacle
+  var isRightSideOfCharacterOverlappingLeftSideOfObstacle = character.x + character.width > this.x;
+
+  // right side collision variable - determines if actual collision is taking place between character/obstacle
+  // var isLeftSideOfCharacterOverlappingRightSideOfObstacle = character.x - character.width < this.x + this.width - character.width;
+  var isLeftSideOfCharacterOverlappingRightSideOfObstacle = character.x < this.x + this.width;
+
+  // top side collision variable - determines if actual collision is taking place between character/obstacle
+  var isBottomOfCharacterOverlappingTopOfObstacle = character.y + character.height > this.y;
+
+  // bottom side collision variable - determines if actual collision is taking place between character/obstacle
+  var isTopOfCharacterOverlappingBottomOfObstacle = character.y < this.y + this.height;
 
   // Boolean variable to ensure that character is colliding with obstacle on obstacle left within the "height" range of obstacle
   var isCollidingFromLeft = isRightSideOfCharacterOverlappingLeftSideOfObstacle &&
@@ -150,7 +159,7 @@ function Obstacle(height, width, x, y, color) {
     character.y = this.y - character.height;
     character.jumping = false;
     character.y_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
-
+    controller.space = false;
     // fourth IF statement detects collision with BOTTOM side of obstacle
   } else if (isCollidingFromBottom) {
     //console.log('bottom collision', character, this);
@@ -340,7 +349,7 @@ var MAP = {
 function renderTiles() {
   var map_index = 0;
 
-  // increment by actual TILE_SIZE to avoid multiplying on every interation
+  // increment by actual TILE_SIZE to avoid multiplying on every iteration
   for (var top = 0; top < MAP.height; top += TILE_SIZE) {
     for (var left = 0; left < MAP.width; left += TILE_SIZE) {
 

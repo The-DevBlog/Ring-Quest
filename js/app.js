@@ -252,6 +252,12 @@ loop = function () {
   window.requestAnimationFrame(loop);
 };
 
+// draw the player to the screen
+drawPlayer = function () {
+  // cut out the sprite in chunks to display the correct frames
+  ctx.drawImage(spriteSheet.image, character.animate.frame * spriteSize, 0, spriteSize, spriteSize, Math.floor(character.x), Math.floor(character.y), spriteSize, spriteSize);
+};
+
 // start the animation loop AFTER the images have loaded
 spriteSheet.image.addEventListener('load', function (event) {
   window.requestAnimationFrame(loop);

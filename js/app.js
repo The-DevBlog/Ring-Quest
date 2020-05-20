@@ -127,7 +127,7 @@ window.requestAnimationFrame(loop);
 // var BUFFER = document.createElement('canvas').getContext('2d', {alpha:false, desynchronized:true});
 
 // width and height for every tile
-var TILE_SIZE = 16;
+var TILE_SIZE = 48;
 
 // The TILES object contains "tile" objects with keys that correspond to map values. Each tile has an *object color**
 

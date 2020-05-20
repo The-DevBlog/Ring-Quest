@@ -104,3 +104,10 @@ main {
 #creators {
   margin-top: 50px;;
 }
+
+canvas {
+  display: inline-block;
+  text-align: center;
+  padding-left: 270px;
+  padding-right: 250px;
+}

@@ -252,6 +252,11 @@ loop = function () {
   window.requestAnimationFrame(loop);
 };
 
+// start the animation loop AFTER the images have loaded
+spriteSheet.image.addEventListener('load', function (event) {
+  window.requestAnimationFrame(loop);
+});
+
 spriteSheet.image.src="../sprites/character75x75.png"
 
 // Event listeners for key presses
@@ -259,7 +264,7 @@ window.addEventListener('keydown', controller.keyListener);
 window.addEventListener('keyup', controller.keyListener);
 
 // initiate loop
-window.requestAnimationFrame(loop);
+//window.requestAnimationFrame(loop);
 
 
 

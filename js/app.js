@@ -252,7 +252,7 @@ loop = function () {
   window.requestAnimationFrame(loop);
 };
 
-
+spriteSheet.image.src="../sprites/character75x75.png"
 
 // Event listeners for key presses
 window.addEventListener('keydown', controller.keyListener);

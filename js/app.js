@@ -241,15 +241,17 @@ loop = function () {
     xCoord += (ctx.canvas.width * .1);
   } */
 
- new Obstacle(100, 100, 300, 525, 'blue');
- new Obstacle(100, 100, 700, 325, 'red');
- new Obstacle(100, 100, 900, 525, 'black');
- new Obstacle(100, 100, 1000, 325, 'green');
- new Obstacle(100, 100, 1400, 225, 'pink');
+  new Obstacle(100, 100, 300, 525, 'blue');
+  new Obstacle(100, 100, 700, 325, 'red');
+  new Obstacle(100, 100, 900, 525, 'black');
+  new Obstacle(100, 100, 1000, 325, 'green');
+  new Obstacle(100, 100, 1400, 225, 'pink');
 
+ // update animation
+ character.animate.update();
 
   // update browser when it is ready to draw again
-  window.requestAnimationFrame(loop);
+ window.requestAnimationFrame(loop);
 };
 
 // draw the player to the screen

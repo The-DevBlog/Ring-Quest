@@ -120,6 +120,13 @@ main {
   padding-bottom: 30px;;
 }
 
+canvas {
+  display: inline-block;
+  text-align: center;
+  padding-left: 270px;
+  padding-right: 250px;
+}
+
 .maker {
   height: 500px;
 }
@@ -242,4 +249,3 @@ input[type=submit]:active {
   box-shadow: 0 5px #666;
   transform: translateY(4px);
 }
-

@@ -188,6 +188,7 @@ controller = {
 
 
 loop = function () {
+
   // controls jumping movement
   if (controller.space && character.jumping == false) {
     // negative y value will allow character to move up
@@ -242,6 +243,9 @@ loop = function () {
   }
 
   // draw background
+  renderTiles();
+  resize();
+
   ctx.fillStyle = 'lightblue';
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -292,20 +296,81 @@ spriteSheet.image.src="../sprites/character75x75.png"
 window.addEventListener('keydown', controller.keyListener);
 window.addEventListener('keyup', controller.keyListener);
 
-// initiate loop
-//window.requestAnimationFrame(loop);
+// width and height for every tile
+var TILE_SIZE = 48;
+
+var TILES = {
+  0: { color: '#552828' }, // 0: plainBackground
+  1: { color: '#6B6B6B' }, // 1: floorpath
+  2: { color: '#008000' }, // 2: platform
+  3: { color: '#FFD700' }, // 3: ringOfPower
+};
+
+// Holds info about the map, including tile indices array
+var MAP = {
+  columns: 16,
+  rows: 14,
+  height: 14 * TILE_SIZE,
+  width: 16 * TILE_SIZE,
 
 
+  // Used during image scaling to ensure rendered image isn't skewed
+  width_height_ratio: 16 / 14,
+
+  // tiles in this array correspond to those in TILES object
+  tiles: [
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1,
+  0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
+  0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 2, 2,
+  0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 2, 2, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
+  0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 2, 0, 0,
+  0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
+  0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3,
+  1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1]
+
+};
 
 
+// Renders tiles to buffer
+function renderTiles() {
+  var map_index = 0;
 
+  // increment by actual TILE_SIZE to avoid multiplying on every interation
+  for(var top = 0; top < MAP.height; top += TILE_SIZE) {
+    for(var left = 0; left < MAP.width; left += TILE_SIZE) {
+      var tile_value = MAP.tiles[map_index];
+      var tile = TILES[tile_value];
+      // Does buffer fillStyle change which kinds of tiles I can use?
+      ctx.fillStyle = tile.color;
 
-//TODO: Implement some kind of "parabola" for jumps to avoid making them overpowered -i.e., jump decay or "Delta-T"
+      ctx.fillRect(left, top, TILE_SIZE, TILE_SIZE);
+      map_index ++;
+    }
+  }
+}
 
-//TODO: Fix glitch in which character "snaps" to floor upon reaching a certain distance to the ground
+// This function resizes the CSS width and height of the DISPLAY canvas to force it to scale to fit the window.
+function resize(event) {
+  var height = ctx.canvas.height;
+  var width = ctx.canvas.width;
 
-//TODO: Fix glitch where character snaps to top corners of obstacles briefly upon sliding off the top
+  // Makes sure the DISPLAY canvas is resized in a way that maintains the MAP's width/height ratio.
+  if(width / height < MAP.width_height_ratio) height = Math.floor(width / MAP.width_height_ratio);
+  else width = Math.floor(height * MAP.width_height_ratio);
 
-//TODO: Fix glitch where "jump velocity" of less than 60 renders character unable to jump
+  // ctx.canvas.style.height = height + 'px';
+  // ctx.canvas.style.width = width + 'px';
+}
 
-//TODO: Remove collision console log commands and debugger lines once finished
+// Setting the initial height and width of the BUFFER and DISPLAY canvases.
+ctx.canvas.width = MAP.width;
+ctx.canvas.height = MAP.height;
+ctx.imageSmoothingEnabled = false;
+
+window.addEventListener('resize', resize);

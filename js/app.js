@@ -65,7 +65,7 @@ character = {
   animate: new Animate()
 };
 
-// player sprite sheet
+// an object to represent player sprite sheet and define frames
 spriteSheet = {
   frameSet: [
     [0, 1], // standing still

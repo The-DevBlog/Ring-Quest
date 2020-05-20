@@ -53,9 +53,6 @@ Animate.prototype = {
   }
 };
 
-
-
-
 // an object to display the character
 character = {
   height: 50,
@@ -78,7 +75,6 @@ spriteSheet = {
   ],
   image: new Image()
 };
-
 
 
 function Obstacle(height, width, x, y, color) {
@@ -166,7 +162,7 @@ function Obstacle(height, width, x, y, color) {
 
 
 
-// object to control the keyboard input
+// Controller object to control the keyboard input
 controller = {
   left: false,
   right: false,
@@ -187,6 +183,9 @@ controller = {
     }
   }
 };
+
+
+
 
 loop = function () {
   // controls jumping movement
@@ -252,12 +251,18 @@ loop = function () {
   // update browser when it is ready to draw again
   window.requestAnimationFrame(loop);
 };
+
+
+
 // Event listeners for key presses
 window.addEventListener('keydown', controller.keyListener);
 window.addEventListener('keyup', controller.keyListener);
 
 // initiate loop
 window.requestAnimationFrame(loop);
+
+
+
 
 
 

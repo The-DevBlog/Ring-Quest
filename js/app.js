@@ -9,7 +9,7 @@ var drawPlayer;
 
 ctx = document.getElementById('myCanvas').getContext('2d');
 ctx.canvas.width = innerWidth;
-ctx.canvas.height = 725;
+ctx.canvas.height = 825;
 
 var Animate = function (delay, frameSet) {
   this.delay = delay; // delay between frames
@@ -94,10 +94,10 @@ function Obstacle(height, width, x, y, color) {
   // OBSTACLE COLLISION DETECTION - Note: Collision properties are a part of the "Obstacle" constructor, and therefore it is the Obstacles that check for character collision
  
   // Variables to determine generally which "side" of an obstacle a character is on - with small margins added/subtracted to serve as measures of "forgiveness" to allow collision properties some leeway to trigger
-  var isCharacterOnLeft = character.x + character.width < this.x + 10;
-  var isCharacterOnRight = character.x > this.x + this.width - 10;
-  var isCharacterAbove = character.y + character.height < this.y + 15;
-  var isCharacterBelow = character.y > this.height + this.y - 10;
+  var isCharacterOnLeft = character.x + character.width < this.x + 20;
+  var isCharacterOnRight = character.x > this.x + this.width - 20;
+  var isCharacterAbove = character.y + character.height < this.y + 20;
+  var isCharacterBelow = character.y > this.height + this.y - 30;
 
   // Variables to determine if actual "collision"/overlap of obstacle/character boundaries takes place
   var isRightSideOfCharacterOverlappingLeftSideOfObstacle = character.x + character.width > this.x; // left side collision variable - determines if actual collision is taking place between character/obstacle
@@ -194,6 +194,7 @@ loop = function () {
     character.y_vel -= 60;
     // prevents character from jumping again if already jumping
     character.jumping = true;
+    //controller.space = false;
   }
   
   // if character is jumping, display jumping sprite set
@@ -209,13 +210,13 @@ loop = function () {
   // controls left movement
   if (controller.left) {
     character.animate.change(spriteSheet.frameSet[2], 15); // animate sprite with left-facing movement frames
-    character.x_vel -= 1; // negative x value to move left
+    character.x_vel -= 0.5;  // negative x value to move left
   }
 
   // controls right movement
   if (controller.right) {
     character.animate.change(spriteSheet.frameSet[1], 15); // animate sprite with right-facing movement frames
-    character.x_vel += 1; // positive x value to move right
+    character.x_vel += 0.5; // positive x value to move right
   }
   character.y_vel += 1.5; // creates gravity on each frame
   character.x += character.x_vel; // add velocity to x position
@@ -240,19 +241,15 @@ loop = function () {
     character.x = ctx.canvas.width - character.width;
   }
 
-
   // draw background
   ctx.fillStyle = 'lightblue';
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
- /* var xCoord = 0
-  for (var i = 0; i < 10; i++) {
-    new Obstacle(100, ctx.canvas.width * 1, xCoord, ctx.canvas.height, 'green');
-    xCoord += (ctx.canvas.width * .1);
-  } */
-
-  // Invoke function to draw the player character
+    // Invoke function to draw the player character
   drawPlayer();
+
+  // Invoke function to draw the floor
+  drawFloor('green');
 
   new Obstacle(100, 100, 300, 525, 'blue');
   new Obstacle(100, 100, 700, 325, 'red');
@@ -272,6 +269,17 @@ drawPlayer = function () {
   // cut out the sprite in chunks to display the correct frames
   ctx.drawImage(spriteSheet.image, character.animate.frame * spriteSize, 0, spriteSize, spriteSize, Math.floor(character.x), Math.floor(character.y), spriteSize, spriteSize);
 };
+
+// function to draw the floor with Obstacles() instances
+function drawFloor(color) {
+  var floorHeight = 100; // distance from bottom of Canvas to top of floor
+  var xCoord = 0; // represents start of X-axis on canvas
+  for (var i = 0; i < ctx.canvas.width; i++) {
+    new Obstacle(floorHeight, ctx.canvas.width * 1, xCoord, ctx.canvas.height - floorHeight, color);
+    xCoord += (ctx.canvas.width * .1);
+  }
+}
+
 
 // start the animation loop AFTER the images have loaded
 spriteSheet.image.addEventListener('load', function (event) {

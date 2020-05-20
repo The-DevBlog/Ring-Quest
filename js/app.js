@@ -48,40 +48,40 @@ function Obstacle(height, width, x, y, color) {
   // OBSTACLE COLLISION DETECTION - Note: Collision properties are a part of the "Obstacle" constructor, and therefore it is the Obstacles that check for character collision
  
   // Variables to determine generally which "side" of an obstacle a character is on - with small margins added/subtracted to serve as measures of "forgiveness" to allow collision properties some leeway to trigger
-  var ischaracterOnLeft = character.x + character.width < this.x + 10;
-  var ischaracterOnRight = character.x > this.x + this.width - 10;
-  var ischaracterAbove = character.y + character.height < this.y + 15;
-  var ischaracterBelow = character.y > this.height + this.y - 10;
+  var isCharacterOnLeft = character.x + character.width < this.x + 10;
+  var isCharacterOnRight = character.x > this.x + this.width - 10;
+  var isCharacterAbove = character.y + character.height < this.y + 15;
+  var isCharacterBelow = character.y > this.height + this.y - 10;
 
   // Variables to determine if actual "collision"/overlap of obstacle/character boundaries takes place
-  var isRightSideOfcharacterOverlappingLeftSideOfObstacle = character.x + character.width > this.x; // left side collision variable - determines if actual collision is taking place between character/obstacle
-  var isLeftSideOfcharacterOverlappingRightSideOfObstacle = character.x - character.width < this.x + this.width - character.width; // right side collision variable - determines if actual collision is taking place between character/obstacle
-  var isBottomOfcharacterOverlappingTopOfObstacle = character.y + character.height > this.y; // top side collision variable - determines if actual collision is taking place between character/obstacle
-  var isTopOfcharacterOverlappingBottomOfObstacle = character.y < this.y + this.height; // bottom side collision variable - determines if actual collision is taking place between character/obstacle
+  var isRightSideOfCharacterOverlappingLeftSideOfObstacle = character.x + character.width > this.x; // left side collision variable - determines if actual collision is taking place between character/obstacle
+  var isLeftSideOfCharacterOverlappingRightSideOfObstacle = character.x - character.width < this.x + this.width - character.width; // right side collision variable - determines if actual collision is taking place between character/obstacle
+  var isBottomOfCharacterOverlappingTopOfObstacle = character.y + character.height > this.y; // top side collision variable - determines if actual collision is taking place between character/obstacle
+  var isTopOfCharacterOverlappingBottomOfObstacle = character.y < this.y + this.height; // bottom side collision variable - determines if actual collision is taking place between character/obstacle
 
 // Boolean variable to ensure that character is colliding with obstacle on obstacle left within the "height" range of obstacle
-  var isCollidingFromLeft = isRightSideOfcharacterOverlappingLeftSideOfObstacle &&
-    isTopOfcharacterOverlappingBottomOfObstacle &&
-    isBottomOfcharacterOverlappingTopOfObstacle &&
-    ischaracterOnLeft;
+  var isCollidingFromLeft = isRightSideOfCharacterOverlappingLeftSideOfObstacle &&
+    isTopOfCharacterOverlappingBottomOfObstacle &&
+    isBottomOfCharacterOverlappingTopOfObstacle &&
+    isCharacterOnLeft;
 
 // Boolean variable to ensure that character is colliding with obstacle on obstacle right within the "height" range of obstacle
-  var isCollidingFromRight = isLeftSideOfcharacterOverlappingRightSideOfObstacle &&
-    isTopOfcharacterOverlappingBottomOfObstacle &&
-    isBottomOfcharacterOverlappingTopOfObstacle &&
-    ischaracterOnRight;
+  var isCollidingFromRight = isLeftSideOfCharacterOverlappingRightSideOfObstacle &&
+    isTopOfCharacterOverlappingBottomOfObstacle &&
+    isBottomOfCharacterOverlappingTopOfObstacle &&
+    isCharacterOnRight;
 
 // Boolean variable to ensure that character is colliding with obstacle on obstacle top within the "width" range of obstacle
-  var isCollidingFromTop = isRightSideOfcharacterOverlappingLeftSideOfObstacle &&
-    isLeftSideOfcharacterOverlappingRightSideOfObstacle &&
-    isBottomOfcharacterOverlappingTopOfObstacle &&
-    ischaracterAbove;
+  var isCollidingFromTop = isRightSideOfCharacterOverlappingLeftSideOfObstacle &&
+    isLeftSideOfCharacterOverlappingRightSideOfObstacle &&
+    isBottomOfCharacterOverlappingTopOfObstacle &&
+    isCharacterAbove;
 
 // Boolean variable to ensure that character is colliding with obstacle on obstacle bottom within the "width" range of obstacle
-  var isCollidingFromBottom = isTopOfcharacterOverlappingBottomOfObstacle &&
-    ischaracterBelow &&
-    isLeftSideOfcharacterOverlappingRightSideOfObstacle &&
-    isRightSideOfcharacterOverlappingLeftSideOfObstacle;
+  var isCollidingFromBottom = isTopOfCharacterOverlappingBottomOfObstacle &&
+    isCharacterBelow &&
+    isLeftSideOfCharacterOverlappingRightSideOfObstacle &&
+    isRightSideOfCharacterOverlappingLeftSideOfObstacle;
 
  // first IF statement detects collision with LEFT side of obstacle is TRUE
   if (isCollidingFromLeft) {

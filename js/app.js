@@ -197,9 +197,9 @@ loop = function () {
   }
   
   // if character is jumping, display jumping sprite set
-  // if (character.y_vel < 0) {
-  //   character.animate.change(spriteSheet.frameSet[3]);
-  // }
+  if (character.y_vel < 0) {
+    character.animate.change(spriteSheet.frameSet[3]);
+  }
 
   // if character is standing still, display standing still sprite set
   if (!controller.left && !controller.right && character.jumping === false) {

@@ -57,14 +57,15 @@ Animate.prototype = {
 
 
 // an object to display the character
-character = { // character sprite aka (RECTANGLE)
+character = {
   height: 50,
   width: 50,
   jumping: true, // true if jumping, false if not
-  x: 300,
+  x: 150,
   x_vel: 0, // speed left and right
   y: 0,
-  y_vel: 0
+  y_vel: 0,
+  animate: new Animate()
 };
 
 

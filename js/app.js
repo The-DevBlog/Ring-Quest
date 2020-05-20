@@ -230,11 +230,6 @@ loop = function () {
   ctx.fillStyle = 'lightblue';
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-  // draw character
-  ctx.fillStyle = 'yellow';
-  ctx.beginPath();
-  ctx.fillRect(character.x, character.y, character.width, character.height);
-
  /* var xCoord = 0
   for (var i = 0; i < 10; i++) {
     new Obstacle(100, ctx.canvas.width * 1, xCoord, ctx.canvas.height, 'green');

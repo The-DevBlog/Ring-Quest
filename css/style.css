@@ -145,6 +145,35 @@ nav :hover {
   left: 255px;
 }
 
+#shop {
+  text-align: center;
+  padding-bottom: 50px;
+  font-size: 22px;
+}
+
+#tshirts {
+  margin-right: 100px;
+  align-content: center;
+}
+
+figcaption {
+  text-align: center;
+  font-family: 'IM Fell Double Pica', serif;
+  font-size: 18px;
+}
+
+#merchfoot {
+  float: left;
+}
+
+.product {
+  display: block;
+  float: right;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 50px;
+}
+
 #demo {
   background-color: #c5b6ba;
 }

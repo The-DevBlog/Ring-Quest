@@ -76,7 +76,6 @@ spriteSheet = {
   image: new Image()
 };
 
-
 function Obstacle(height, width, x, y, color) {
   this.height = height;
   this.width = width;
@@ -169,8 +168,6 @@ function Obstacle(height, width, x, y, color) {
   }
 }
 
-
-
 // Controller object to control the keyboard input
 controller = {
   left: false,
@@ -193,9 +190,6 @@ controller = {
   }
 };
 
-
-
-
 loop = function () {
 
   // controls jumping movement
@@ -204,7 +198,6 @@ loop = function () {
     character.y_vel -= 60;
     // prevents character from jumping again if already jumping
     character.jumping = true;
-    //controller.space = false;
   }
 
   // if character is jumping, display jumping sprite set
@@ -284,13 +277,12 @@ function drawFloor(color) {
   }
 }
 
-
 // start the animation loop AFTER the images have loaded
 spriteSheet.image.addEventListener('load', function (event) {
   window.requestAnimationFrame(loop);
 });
 
-spriteSheet.image.src = "../sprites/character75x75.png"
+spriteSheet.image.src = '../sprites/character75x75.png';
 
 // Event listeners for key presses
 window.addEventListener('keydown', controller.keyListener);
@@ -306,9 +298,6 @@ var TILES = {
   1: {
     color: '#6B6B6B'
   }, // 1: floorpath
-  // 2: {
-  //   color: '#008000'
-  // }, // 2: platform
   2: new Obstacle(),
   3: {
     color: '#FFD700'

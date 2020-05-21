@@ -10,10 +10,6 @@ var TILE_SIZE = 100;
 
 ctx = document.getElementById('myCanvas').getContext('2d');
 
-//TODO: delete this
-// ctx.canvas.width = innerWidth;
-// ctx.canvas.height = 825;
-
 var Animate = function (delay, frameSet) {
   this.delay = delay; // delay between frames
   this.frame = 0;
@@ -86,8 +82,6 @@ function Obstacle(height, width, x, y) {
   this.width = width;
   this.x = x;
   this.y = y;
-
-  // ctx.beginPath(); //TODO: uncomment
 
   // OBSTACLE COLLISION DETECTION - Note: Collision properties are a part of the "Obstacle" constructor, and therefore it is the Obstacles that check for character collision
 
@@ -178,14 +172,14 @@ controller = {
     var keyState = (event.type == 'keydown') ? true : false;
     // switch statement to determine which key is being pressed. This could have been done with an 'if.. else if' statement, but the switch statement is a much cleaner way to handle this. Also, each key on a keyboard has a specific 'keyCode' attached to it. keyCode is a built in JavaScript variable.
     switch (event.keyCode) {
-      case 65: // left arrow key
-        controller.left = keyState;
-        break;
-      case 87: // space bar key
-        controller.space = keyState;
-        break;
-      case 68: // right arrow key
-        controller.right = keyState;
+    case 65: // left arrow key
+      controller.left = keyState;
+      break;
+    case 87: // space bar key
+      controller.space = keyState;
+      break;
+    case 68: // right arrow key
+      controller.right = keyState;
     }
   }
 };
@@ -229,16 +223,6 @@ loop = function () {
   character.x_vel *= 0.9;
   character.y_vel *= 0.9;
 
-  //TODO: get rid of this if statement
-  // collision detection for floor
-  // if character is falling below the floor
-  // var groundHeight = ctx.canvas.height - character.height; // new variable
-  // if (character.y > groundHeight - character.height) {
-  //   character.jumping = false; // allow to jump again
-  //   character.y = groundHeight; // dont fall past the floor
-  //   character.y_vel = 0; // stop if hits the floor
-  // }
-
   // if character is going past the left or right boundaries of the window
   if (character.x < 0) {
     character.x = 0;
@@ -260,7 +244,6 @@ loop = function () {
 
   // update browser when it is ready to draw again
   window.requestAnimationFrame(loop);
-  // resize();
 };
 
 // draw the player to the screen
@@ -287,10 +270,6 @@ spriteSheet.image.addEventListener('load', function (event) {
 });
 
 spriteSheet.image.src = '../sprites/character75x75.png';
-
-// Event listeners for key presses
-// window.addEventListener('keydown', controller.keyListener);
-// window.addEventListener('keyup', controller.keyListener);
 
 var TILES = {
   // background

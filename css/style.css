@@ -1,14 +1,57 @@
 body {
-  margin: 0 auto;
-  font-family: 'IM Fell Double Pica', serif;
-  color: #53453c;
   background-color: #e7d9d7;
+  color: #53453c;
+  font-family: 'IM Fell Double Pica', serif;
+  margin: 0 auto;
+}
+
+main {
+  height: 100px;
+  margin-top: 90px;
+  width: 100%;  
+}
+
+header {
+  background-color:#c5b6ba;
+  overflow: hidden;
+  padding-left: 30px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+header::after {
+clear: both;
+content: '';
+display: table;
+}
+
+canvas {
+  display: inline-block;
+  padding-left: 270px;
+  padding-right: 250px;
+  text-align: center;
+}
+
+footer {
+  font-size: 18px;
+  padding-left: 30px;
+}
+
+iframe {
+  display: block;
+  margin: auto;
+  padding: 20px 10px 20px 10px;
+}
+
+p {
+  color: #1c110f;
 }
 
 h1 {
+  color: #53453c;
   font-family: 'Bilbo', cursive;
   font-size: 50px;
-  color: #53453c;
   line-height: 0;
 }
 
@@ -18,29 +61,30 @@ a {
 }
 
 h2 {
-  font-size: 16px;
   color: #53453c;
+  font-size: 16px;
   margin-left: 32px;
 }
 
 #logo {
-  margin-right: 100px;
   float: left;
+  margin-right: 100px; 
 }
 
+/* navigation bar */
 nav ul {
-  margin: 0;
-  padding: 0;
   list-style: none;
+  margin: 0;
+  padding: 0; 
 }
 
 nav li {
   display:inline-block;
+  font-family: 'IM Fell Double Pica', serif;
+  font-size: 20px;
   margin-left: 80px; 
   margin-top: 20px;
   padding-top: 10px; 
-  font-size: 20px;
-  font-family: 'IM Fell Double Pica', serif;
   padding: 20px;
 }
 
@@ -53,34 +97,15 @@ nav :hover {
   color: rgb(46, 70, 46);
 }
 
-header {
-  overflow: hidden;
-  padding-left: 30px;
-  background-color:#c5b6ba;
-  position: fixed;
-  top: 0;
-  width: 100%;
-}
-
-header::after {
-content: '';
-display: table;
-clear: both;
-}
-
-main {
-  width: 100%;
-  height: 100px;
-}
-
+/* Start playing button */
 #play {
+  background-color:#e7d9d7;
+  border-radius: 32px;
+  box-shadow: 0 8px rgb(73, 73, 73);
   color: #53453c;;
   font-family: 'IM Fell Double Pica', serif;
-  border-radius: 32px;
   font-size: 34px;
-  padding: 20px;
-  background-color:#e7d9d7;
-  box-shadow: 0 8px rgb(73, 73, 73);
+  padding: 20px;   
 }
 
 #play:hover {
@@ -106,34 +131,66 @@ main {
   font-size: 18px;
 }
 
-p {
-  color: #1c110f;
+#creepster {
+  float: right;
+  position: absolute;
+  left: 1200px;
+  bottom: -329px;
 }
 
-main {
-  margin-top: 90px;
+#smeagol {
+  position: absolute;
+  z-index: -1;
+  bottom: 10px;
+  left: 255px;
 }
 
+#shop {
+  text-align: center;
+  padding-bottom: 50px;
+  font-size: 22px;
+}
+
+#tshirts {
+  margin-right: 100px;
+  align-content: center;
+}
+
+figcaption {
+  text-align: center;
+  font-family: 'IM Fell Double Pica', serif;
+  font-size: 18px;
+}
+
+#merchfoot {
+  float: left;
+}
+
+.product {
+  display: block;
+  float: right;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 50px;
+}
+
+#demo {
+  background-color: #c5b6ba;
+}
+
+/* about he creators page */
 #creators {
   margin-top: 200px;
+  padding-bottom: 30px;
   text-align: center;
-  padding-bottom: 30px;;
 }
-
-canvas {
-  display: inline-block;
-  text-align: center;
-  padding-left: 270px;
-  padding-right: 250px;
-}
-
 .maker {
   height: 500px;
 }
 
 .maker h3 {
-  font-size: 30px;
   color: #53453c;
+  font-size: 30px;
 }
 
 #aboutthemakers {
@@ -142,8 +199,8 @@ canvas {
 
 .aboutme {
   float: right;
-  width: 600px;
   margin-right: 200px;
+  width: 600px;
 }
 
 h4 {
@@ -155,21 +212,22 @@ h4 {
 /* pop-up background */
 .modal {
   display: none;
+  overflow: auto;
   position: fixed;
   z-index: 1;
   left: 0;
   top: 0;
   width:100%;
   height: 100%;
-  overflow: auto;
 }
 
 /* pop-up content */
 .modal-content { 
   background-color:#c5b6ba;
-  opacity: 70%;
   margin: 15% auto;
+  opacity: 70%;
   padding: 20px;
+  text-align: center;
   width: 60%;
 }
 
@@ -184,60 +242,57 @@ h4 {
 .close:hover, 
 .close:focus {
   color: rgb(46, 70, 46);
-  text-decoration: none;
   cursor: pointer;
+  text-decoration: none;
 }
 
 #myBtn {
-  color: inherit;
-  font: inherit;
   background-color: inherit;
   border: none;
+  color: inherit;
+  font: inherit;  
 }
 
 #myBtn:hover {
-  cursor: pointer;
   color: rgb(46, 70, 46);
+  cursor: pointer;
 }
 
 /* feedback form */
 
 form {
-  font: inherit;
   color: inherit;
+  font: inherit;
   width: 90%;
 }
 
 legend {
-  padding: 20px 0 20px 0;
   font-weight: bold;
   font-size: 18px;
+  padding: 20px 0 20px 0;
 }
-
-input[type=text] {
-} 
 
 textarea {
   width: 60%;
 }
 
 input[type=text], textarea {
-  padding: 12px;
-  margin-top: 6px;
-  margin-bottom: 16px;
   border: 1px solid #53453c;
   border-radius: 4px; 
+  margin-top: 6px;
+  margin-bottom: 16px;
+  padding: 12px;
 }
 
 input[type=submit] {
-  color: #53453c;;
-  font-family: 'IM Fell Double Pica', serif;
-  border-radius: 32px;
-  font-size: 20px;
-  padding: 10px;
   background-color:#e7d9d7;
+  border-radius: 32px;
   box-shadow: 0 4px rgb(73, 73, 73);
+  color: #53453c;;
   display: block;
+  font-family: 'IM Fell Double Pica', serif;
+  font-size: 20px;
+  padding: 10px;  
 }
 
 input[type=submit]:hover {

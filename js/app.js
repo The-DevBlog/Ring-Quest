@@ -9,8 +9,10 @@ var drawPlayer;
 var TILE_SIZE = 100;
 
 ctx = document.getElementById('myCanvas').getContext('2d');
-ctx.canvas.width = innerWidth;
-ctx.canvas.height = 825;
+
+//TODO: delete this
+// ctx.canvas.width = innerWidth;
+// ctx.canvas.height = 825;
 
 var Animate = function (delay, frameSet) {
   this.delay = delay; // delay between frames
@@ -90,12 +92,13 @@ function Obstacle(height, width, x, y) {
   // OBSTACLE COLLISION DETECTION - Note: Collision properties are a part of the "Obstacle" constructor, and therefore it is the Obstacles that check for character collision
 
   // Variables to determine generally which "side" of an obstacle a character is on - with small margins added/subtracted to serve as measures of "forgiveness" to allow collision properties some leeway to trigger
-  var isCharacterOnLeft = character.x + character.width < this.x;
-  var isCharacterOnRight = character.x > this.x + this.width;
+  var isCharacterOnLeft = character.x + character.width < this.x + 20;
+  var isCharacterOnRight = character.x > this.x + this.width - 20;
   var isCharacterAbove = character.y + character.height < this.y + 20;
   var isCharacterBelow = character.y > this.height + this.y - 20;
 
   // Variables to determine if actual "collision"/overlap of obstacle/character boundaries takes place
+
 
   // left side collision variable - determines if actual collision is taking place between character/obstacle
   var isRightSideOfCharacterOverlappingLeftSideOfObstacle = character.x + character.width > this.x;
@@ -190,7 +193,7 @@ controller = {
 loop = function () {
 
   // controls jumping movement
-  if (controller.space && character.jumping == false) {
+  if (controller.space && character.jumping === false) {
     // negative y value will allow character to move up
     character.y_vel -= 60;
     // prevents character from jumping again if already jumping
@@ -226,14 +229,16 @@ loop = function () {
   character.x_vel *= 0.9;
   character.y_vel *= 0.9;
 
+  //TODO: get rid of this if statement
   // collision detection for floor
   // if character is falling below the floor
-  var groundHeight = ctx.canvas.height - character.height; // new variable
-  if (character.y > groundHeight - character.height) {
-    character.jumping = false; // allow to jump again
-    character.y = groundHeight; // dont fall past the floor
-    character.y_vel = 0; // stop if hits the floor
-  }
+  // var groundHeight = ctx.canvas.height - character.height; // new variable
+  // if (character.y > groundHeight - character.height) {
+  //   character.jumping = false; // allow to jump again
+  //   character.y = groundHeight; // dont fall past the floor
+  //   character.y_vel = 0; // stop if hits the floor
+  // }
+
   // if character is going past the left or right boundaries of the window
   if (character.x < 0) {
     character.x = 0;
@@ -243,19 +248,19 @@ loop = function () {
 
   // draw background
   renderTiles();
-  resize();
 
   // Invoke function to draw the player character
   drawPlayer();
 
   // Invoke function to draw the floor
-  drawFloor('green');
+  drawFloor();
 
   // update animation
   character.animate.update();
 
   // update browser when it is ready to draw again
   window.requestAnimationFrame(loop);
+  // resize();
 };
 
 // draw the player to the screen
@@ -265,8 +270,7 @@ drawPlayer = function () {
 };
 
 // function to draw the floor with Obstacles() instances
-function drawFloor(color) {
-
+function drawFloor() {
 
   var floorHeight = 100;
 
@@ -274,8 +278,6 @@ function drawFloor(color) {
   for (var i = 0; i < ctx.canvas.width; i++) {
     new Obstacle(floorHeight, ctx.canvas.width * 1, xCoord, ctx.canvas.height - floorHeight);
     xCoord += (ctx.canvas.width * .1);
-
-    // ctx.drawImage(spriteSheet.image2, xCoord, ctx.canvas.height - floorHeight);
   }
 }
 
@@ -287,10 +289,9 @@ spriteSheet.image.addEventListener('load', function (event) {
 spriteSheet.image.src = '../sprites/character75x75.png';
 
 // Event listeners for key presses
-window.addEventListener('keydown', controller.keyListener);
-window.addEventListener('keyup', controller.keyListener);
+// window.addEventListener('keydown', controller.keyListener);
+// window.addEventListener('keyup', controller.keyListener);
 
-// 3: ringOfPower
 var TILES = {
   // background
   0: {
@@ -334,7 +335,7 @@ var MAP = {
     0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
-    0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 2, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
   ]
 };
@@ -360,7 +361,8 @@ function renderTiles() {
         var img = new Image();
         img.src = '../tile-images/platform.png';
         ctx.drawImage(img, left, top);
-        new Obstacle(TILE_SIZE, TILE_SIZE, left, top);
+
+        new Obstacle(100, 100, left, top);
       } else if (MAP.tiles[map_index] === 4 || MAP.tiles[map_index] === 1) {
 
         tile.image.src = '../tile-images/floorpath.png';
@@ -373,20 +375,11 @@ function renderTiles() {
   }
 }
 
-// This function resizes the CSS width and height of the DISPLAY canvas to force it to scale to fit the window.
-function resize(event) {
-  var height = ctx.canvas.height;
-  var width = ctx.canvas.width;
-
-  // Makes sure the DISPLAY canvas is resized in a way that maintains the MAP's width/height ratio.
-  if (width / height < MAP.width_height_ratio) height = Math.floor(width / MAP.width_height_ratio);
-  else width = Math.floor(height * MAP.width_height_ratio);
-
-}
-
-// Setting the initial height and width of the BUFFER and DISPLAY canvases.
+// Setting the initial height and width of the DISPLAY canvas.
 ctx.canvas.width = MAP.width;
 ctx.canvas.height = MAP.height;
-ctx.imageSmoothingEnabled = false;
 
-window.addEventListener('resize', resize);
+window.addEventListener('keydown', controller.keyListener);
+window.addEventListener('keyup', controller.keyListener);
+
+//TODO: delete debugger lines

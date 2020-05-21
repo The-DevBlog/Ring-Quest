@@ -89,7 +89,7 @@ function Obstacle(height, width, x, y) {
   var isCharacterOnLeft = character.x + character.width < this.x + 20;
   var isCharacterOnRight = character.x > this.x + this.width - 20;
   var isCharacterAbove = character.y + character.height < this.y + 20;
-  var isCharacterBelow = character.y > this.height + this.y - 20;
+  var isCharacterBelow = character.y > this.height + this.y - 40;
 
   // Variables to determine if actual "collision"/overlap of obstacle/character boundaries takes place
 
@@ -98,7 +98,6 @@ function Obstacle(height, width, x, y) {
   var isRightSideOfCharacterOverlappingLeftSideOfObstacle = character.x + character.width > this.x;
 
   // right side collision variable - determines if actual collision is taking place between character/obstacle
-  // var isLeftSideOfCharacterOverlappingRightSideOfObstacle = character.x - character.width < this.x + this.width - character.width;
   var isLeftSideOfCharacterOverlappingRightSideOfObstacle = character.x < this.x + this.width;
 
   // top side collision variable - determines if actual collision is taking place between character/obstacle
@@ -117,6 +116,7 @@ function Obstacle(height, width, x, y) {
   var isCollidingFromRight = isLeftSideOfCharacterOverlappingRightSideOfObstacle &&
     isTopOfCharacterOverlappingBottomOfObstacle &&
     isBottomOfCharacterOverlappingTopOfObstacle &&
+    !isCharacterAbove &&
     isCharacterOnRight;
 
   // Boolean variable to ensure that character is colliding with obstacle on obstacle top within the "width" range of obstacle
@@ -140,8 +140,8 @@ function Obstacle(height, width, x, y) {
 
     // second IF statement detects collision with RIGHT side of obstacle is TRUE
   } else if (isCollidingFromRight) {
-    //console.log('right collision', character, this);
-    //debugger;
+    // console.log('right collision', character, this);
+    // debugger;
     character.x = this.x + this.width;
     character.x_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
 
@@ -282,8 +282,11 @@ var TILES = {
     image: new Image()
   },
   2: new Obstacle(),
+  // 3: {
+  //   color: '#FFD700' //TODO: correct and delete
+  // },
   3: {
-    color: '#FFD700' //TODO: correct and delete
+    image: new Image()
   },
   4: {
     image: new Image()
@@ -306,15 +309,15 @@ var MAP = {
     0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1,
     0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
     0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3,
     0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 2, 2,
     0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 2, 2, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
     0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 2, 0, 0,
     0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
-    0, 2, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
+    2, 2, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
   ]
 };
@@ -335,6 +338,7 @@ function renderTiles() {
 
         tile.image.src = '../tile-images/plainbackgroundtile.png';
         ctx.drawImage(tile.image, left, top);
+
       } else if (MAP.tiles[map_index] === 2) {
 
         var img = new Image();
@@ -342,13 +346,20 @@ function renderTiles() {
         ctx.drawImage(img, left, top);
 
         new Obstacle(100, 100, left, top);
+
+      } else if (MAP.tiles[map_index] === 3) {
+
+        // draw ring
+        tile.image.src = '../tile-images/ring.png';
+        ctx.drawImage(tile.image, left, top);
+        new Obstacle(100, 100, left, top);
+
       } else if (MAP.tiles[map_index] === 4 || MAP.tiles[map_index] === 1) {
 
         tile.image.src = '../tile-images/floorpath.png';
         ctx.drawImage(tile.image, left, top);
       }
 
-      // Does buffer fillStyle change which kinds of tiles I can use?
       map_index++;
     }
   }

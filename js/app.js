@@ -1,29 +1,171 @@
 'use strict';
 var ctx;
 var controller;
-var rectangle;
+var character;
 var loop;
-var obstacle;
+var spriteSheet;
+var spriteSize = 75;
+var drawPlayer;
+var TILE_SIZE = 100;
+
 ctx = document.getElementById('myCanvas').getContext('2d');
 ctx.canvas.width = innerWidth;
-ctx.canvas.height = 625;
-// an object to display the rectangle
-rectangle = {
-  height: 50,
-  width: 50,
+ctx.canvas.height = 825;
+
+var Animate = function (delay, frameSet) {
+  this.delay = delay; // delay between frames
+  this.frame = 0;
+  this.frameIdx = 0; // individual frame index
+  this.count = 0;
+  // left walking, right walking and standing still frames
+  this.frameSet = frameSet;
+};
+
+Animate.prototype = {
+  // change which frameset to display
+  change: function (frameSet, delay = 15) {
+    // if the current frameset changes, then change the following
+    // properties
+    if (this.frameSet !== frameSet) {
+      this.count = 0;
+      this.delay = delay;
+      this.frameSet = frameSet;
+      this.frameIdx = 0;
+      this.frame = this.frameSet[this.frameIdx];
+    }
+  },
+
+  // invoke on every game cycle
+  update: function () {
+    this.count++; // tracks game engine iterations
+    // reset the count if it is equal to or greater than the delay, this enables the delay between frames
+    if (this.count >= this.delay) {
+      this.count = 0;
+
+      // NOTE - the following if statement is the same as the above statement
+      if (this.frameIdx === this.frameSet.length - 1) {
+        this.frameIdx = 0;
+      } else if (this.frameSet.length === 1) {
+        this.frameIdx = 0;
+      } else {
+        this.frameIdx += 1;
+      }
+      this.frame = this.frameSet[this.frameIdx];
+    }
+  }
+};
+
+// an object to display the character
+character = {
+  height: 75,
+  width: 75,
   jumping: true, // true if jumping, false if not
   x: 150,
   x_vel: 0, // speed left and right
   y: 0,
-  y_vel: 0
+  y_vel: 0,
+  animate: new Animate()
 };
-obstacle = { // obstacle rectangle to jump over
-  height: 100,
-  width: 100,
-  x: 300,
-  y: 525,
+
+// an object to represent player sprite sheet and define frames
+spriteSheet = {
+  frameSet: [
+    [0, 1], // standing still
+    [2, 3], // walking right
+    [4, 5], // walking left
+    [6] // jumping
+  ],
+  image: new Image(),
+  image2: new Image()
 };
-// object to control the keyboard input
+
+function Obstacle(height, width, x, y) {
+  this.height = height;
+  this.width = width;
+  this.x = x;
+  this.y = y;
+
+  // ctx.beginPath(); //TODO: uncomment
+
+  // OBSTACLE COLLISION DETECTION - Note: Collision properties are a part of the "Obstacle" constructor, and therefore it is the Obstacles that check for character collision
+
+  // Variables to determine generally which "side" of an obstacle a character is on - with small margins added/subtracted to serve as measures of "forgiveness" to allow collision properties some leeway to trigger
+  var isCharacterOnLeft = character.x + character.width < this.x;
+  var isCharacterOnRight = character.x > this.x + this.width;
+  var isCharacterAbove = character.y + character.height < this.y + 20;
+  var isCharacterBelow = character.y > this.height + this.y - 20;
+
+  // Variables to determine if actual "collision"/overlap of obstacle/character boundaries takes place
+
+  // left side collision variable - determines if actual collision is taking place between character/obstacle
+  var isRightSideOfCharacterOverlappingLeftSideOfObstacle = character.x + character.width > this.x;
+
+  // right side collision variable - determines if actual collision is taking place between character/obstacle
+  // var isLeftSideOfCharacterOverlappingRightSideOfObstacle = character.x - character.width < this.x + this.width - character.width;
+  var isLeftSideOfCharacterOverlappingRightSideOfObstacle = character.x < this.x + this.width;
+
+  // top side collision variable - determines if actual collision is taking place between character/obstacle
+  var isBottomOfCharacterOverlappingTopOfObstacle = character.y + character.height > this.y;
+
+  // bottom side collision variable - determines if actual collision is taking place between character/obstacle
+  var isTopOfCharacterOverlappingBottomOfObstacle = character.y < this.y + this.height;
+
+  // Boolean variable to ensure that character is colliding with obstacle on obstacle left within the "height" range of obstacle
+  var isCollidingFromLeft = isRightSideOfCharacterOverlappingLeftSideOfObstacle &&
+    isTopOfCharacterOverlappingBottomOfObstacle &&
+    isBottomOfCharacterOverlappingTopOfObstacle &&
+    isCharacterOnLeft;
+
+  // Boolean variable to ensure that character is colliding with obstacle on obstacle right within the "height" range of obstacle
+  var isCollidingFromRight = isLeftSideOfCharacterOverlappingRightSideOfObstacle &&
+    isTopOfCharacterOverlappingBottomOfObstacle &&
+    isBottomOfCharacterOverlappingTopOfObstacle &&
+    isCharacterOnRight;
+
+  // Boolean variable to ensure that character is colliding with obstacle on obstacle top within the "width" range of obstacle
+  var isCollidingFromTop = isRightSideOfCharacterOverlappingLeftSideOfObstacle &&
+    isLeftSideOfCharacterOverlappingRightSideOfObstacle &&
+    isBottomOfCharacterOverlappingTopOfObstacle &&
+    isCharacterAbove;
+
+  // Boolean variable to ensure that character is colliding with obstacle on obstacle bottom within the "width" range of obstacle
+  var isCollidingFromBottom = isTopOfCharacterOverlappingBottomOfObstacle &&
+    isCharacterBelow &&
+    isLeftSideOfCharacterOverlappingRightSideOfObstacle &&
+    isRightSideOfCharacterOverlappingLeftSideOfObstacle;
+
+  // first IF statement detects collision with LEFT side of obstacle is TRUE
+  if (isCollidingFromLeft) {
+    //console.log('left collision', character, this);
+    //debugger;
+    character.x = this.x - character.width; // set it back to LEFT of obstacle
+    character.x_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
+
+    // second IF statement detects collision with RIGHT side of obstacle is TRUE
+  } else if (isCollidingFromRight) {
+    //console.log('right collision', character, this);
+    //debugger;
+    character.x = this.x + this.width;
+    character.x_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
+
+    // third IF statement detects collision with TOP side of obstacle (and allows character to "stand" on top of obstacles), and re-sets "jump" ability to FALSE to allow character to jump again. Also re-sets y-velocity to avoid "rocket jump" glitch.
+  } else if (isCollidingFromTop) {
+    //console.log('top collision', character, this);
+    //debugger;
+    character.y = this.y - character.height;
+    character.jumping = false;
+    character.y_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
+    controller.space = false;
+    // fourth IF statement detects collision with BOTTOM side of obstacle
+  } else if (isCollidingFromBottom) {
+    //console.log('bottom collision', character, this);
+    //debugger;
+    character.y = this.y + this.height;
+    character.y_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
+  }
+}
+
+// Controller object to control the keyboard input
 controller = {
   left: false,
   right: false,
@@ -33,85 +175,218 @@ controller = {
     var keyState = (event.type == 'keydown') ? true : false;
     // switch statement to determine which key is being pressed. This could have been done with an 'if.. else if' statement, but the switch statement is a much cleaner way to handle this. Also, each key on a keyboard has a specific 'keyCode' attached to it. keyCode is a built in JavaScript variable.
     switch (event.keyCode) {
-      case 37: // left arrow key
+      case 65: // left arrow key
         controller.left = keyState;
         break;
-      case 32: // space bar key
+      case 87: // space bar key
         controller.space = keyState;
         break;
-      case 39: // right arrow key
+      case 68: // right arrow key
         controller.right = keyState;
     }
   }
 };
+
 loop = function () {
-  // controls jumping movement 
-  if (controller.space && rectangle.jumping == false) {
-    // negative y value will allow rectangle to move up
-    rectangle.y_vel -= 60;
-    // prevents rectangle from jumping again if already jumping
-    rectangle.jumping = true;
+
+  // controls jumping movement
+  if (controller.space && character.jumping == false) {
+    // negative y value will allow character to move up
+    character.y_vel -= 60;
+    // prevents character from jumping again if already jumping
+    character.jumping = true;
   }
+
+  // if character is jumping, display jumping sprite set
+  if (character.y_vel < 0) {
+    character.animate.change(spriteSheet.frameSet[3]);
+  }
+
+  // if character is standing still, display standing still sprite set
+  if (!controller.left && !controller.right && character.jumping === false) {
+    character.animate.change(spriteSheet.frameSet[0], 30);
+  }
+
   // controls left movement
   if (controller.left) {
-    rectangle.x_vel -= 1; // negative x value to move left
+    character.animate.change(spriteSheet.frameSet[2], 15); // animate sprite with left-facing movement frames
+    character.x_vel -= 0.5; // negative x value to move left
   }
+
   // controls right movement
   if (controller.right) {
-    rectangle.x_vel += 1; // positive x value to move right
+    character.animate.change(spriteSheet.frameSet[1], 15); // animate sprite with right-facing movement frames
+    character.x_vel += 0.5; // positive x value to move right
   }
-  rectangle.y_vel += 1.5; // creates gravity on each frame
-  rectangle.x += rectangle.x_vel; // add velocity to x position
-  rectangle.y += rectangle.y_vel; // add velocity to y position
-  // friction: this slows down the rectangle until it is at a complete stop
-  rectangle.x_vel *= 0.9;
-  rectangle.y_vel *= 0.9;
-  // collision detection
-  // if rectangle is falling below the floor
-  if (rectangle.y > ctx.canvas.height - 50) {
-    rectangle.jumping = false; // allow to jump again
-    rectangle.y = ctx.canvas.height - 50; // dont fall past the floor
-    rectangle.y_vel = 0; // stop if hits the floor
+  character.y_vel += 1.5; // creates gravity on each frame
+  character.x += character.x_vel; // add velocity to x position
+  character.y += character.y_vel; // add velocity to y position
+
+  // friction: this slows down the character until it is at a complete stop
+  character.x_vel *= 0.9;
+  character.y_vel *= 0.9;
+
+  // collision detection for floor
+  // if character is falling below the floor
+  var groundHeight = ctx.canvas.height - character.height; // new variable
+  if (character.y > groundHeight - character.height) {
+    character.jumping = false; // allow to jump again
+    character.y = groundHeight; // dont fall past the floor
+    character.y_vel = 0; // stop if hits the floor
   }
-  // if rectangle is going past the left or right boundaries of the window
-  if (rectangle.x < 0) {
-    rectangle.x = 0;
-  } else if (rectangle.x > ctx.canvas.width - 50) {
-    rectangle.x = ctx.canvas.width - 50;
+  // if character is going past the left or right boundaries of the window
+  if (character.x < 0) {
+    character.x = 0;
+  } else if (character.x > ctx.canvas.width - character.width) {
+    character.x = ctx.canvas.width - character.width;
   }
-  // obstacle collision detection
-  // first IF statement detects collision with LEFT side of obstacle
-  if (rectangle.x > 300 - rectangle.width &&
-    rectangle.y > ctx.canvas.height - obstacle.height &&
-    rectangle.x < 300) {
-    rectangle.x = 300 - rectangle.width;
-    // second IF statement detect collision with RIGHT side of obstacle
-  } else if (rectangle.x < 350 + rectangle.width &&
-    rectangle.y > ctx.canvas.height - obstacle.height &&
-    rectangle.x > 350) {
-    rectangle.x = 350 + rectangle.width;
-    // third IF statement detects collision with TOP of obstacle (and would allow character/box to "stand" on top), and re-sets "jump" ability to FALSE to allow player to jump again. Also re-sets y-velocity to avoid "rocket jump" glitch.
-  } else if (rectangle.y > ctx.canvas.height - obstacle.height - rectangle.height &&
-    rectangle.x > obstacle.x - rectangle.width &&
-    rectangle.x < obstacle.x + obstacle.width) {
-    rectangle.y = ctx.canvas.height - 150;
-    rectangle.jumping = false;
-    rectangle.y_vel = 10;
-  }
+
   // draw background
-  ctx.fillStyle = 'lightblue';
-  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  // draw rectangle
-  ctx.fillStyle = 'yellow';
-  ctx.beginPath();
-  ctx.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-  //  draw obstacle
-  ctx.fillStyle = 'brown';
-  ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+  renderTiles();
+  resize();
+
+  // Invoke function to draw the player character
+  drawPlayer();
+
+  // Invoke function to draw the floor
+  drawFloor('green');
+
+  // update animation
+  character.animate.update();
+
   // update browser when it is ready to draw again
   window.requestAnimationFrame(loop);
 };
+
+// draw the player to the screen
+drawPlayer = function () {
+  // cut out the sprite in chunks to display the correct frames
+  ctx.drawImage(spriteSheet.image, character.animate.frame * spriteSize, 0, spriteSize, spriteSize, Math.floor(character.x), Math.floor(character.y), spriteSize, spriteSize);
+};
+
+// function to draw the floor with Obstacles() instances
+function drawFloor(color) {
+
+
+  var floorHeight = 100;
+
+  var xCoord = 0; // represents start of X-axis on canvas
+  for (var i = 0; i < ctx.canvas.width; i++) {
+    new Obstacle(floorHeight, ctx.canvas.width * 1, xCoord, ctx.canvas.height - floorHeight);
+    xCoord += (ctx.canvas.width * .1);
+
+    // ctx.drawImage(spriteSheet.image2, xCoord, ctx.canvas.height - floorHeight);
+  }
+}
+
+// start the animation loop AFTER the images have loaded
+spriteSheet.image.addEventListener('load', function (event) {
+  window.requestAnimationFrame(loop);
+});
+
+spriteSheet.image.src = '../sprites/character75x75.png';
+
 // Event listeners for key presses
 window.addEventListener('keydown', controller.keyListener);
 window.addEventListener('keyup', controller.keyListener);
-window.requestAnimationFrame(loop);
+
+// 3: ringOfPower
+var TILES = {
+  // background
+  0: {
+    image: new Image()
+  },
+
+  // floor and ceiling
+  1: {
+    image: new Image()
+  },
+  2: new Obstacle(),
+  3: {
+    color: '#FFD700' //TODO: correct and delete
+  },
+  4: {
+    image: new Image()
+  }
+};
+
+// Holds info about the map, including tile indices array
+var MAP = {
+  columns: 16,
+  rows: 14,
+  height: 14 * TILE_SIZE,
+  width: 16 * TILE_SIZE,
+
+  // Used during image scaling to ensure rendered image isn't skewed
+  width_height_ratio: 16 / 14,
+
+  // tiles in this array correspond to those in TILES object
+  tiles: [
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1,
+    0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 2, 2,
+    0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 2, 2, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
+    0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
+    0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+  ]
+};
+
+// Renders tiles to buffer
+function renderTiles() {
+  var map_index = 0;
+
+  // increment by actual TILE_SIZE to avoid multiplying on every iteration
+  for (var top = 0; top < MAP.height; top += TILE_SIZE) {
+    for (var left = 0; left < MAP.width; left += TILE_SIZE) {
+
+      var tile_value = MAP.tiles[map_index];
+      var tile = TILES[tile_value];
+
+      // if statement to draw the correct sprite to the correct idx position on the tile map
+      if (MAP.tiles[map_index] === 0) {
+
+        tile.image.src = '../tile-images/plainbackgroundtile.png';
+        ctx.drawImage(tile.image, left, top);
+      } else if (MAP.tiles[map_index] === 2) {
+
+        var img = new Image();
+        img.src = '../tile-images/platform.png';
+        ctx.drawImage(img, left, top);
+        new Obstacle(TILE_SIZE, TILE_SIZE, left, top);
+      } else if (MAP.tiles[map_index] === 4 || MAP.tiles[map_index] === 1) {
+
+        tile.image.src = '../tile-images/floorpath.png';
+        ctx.drawImage(tile.image, left, top);
+      }
+
+      // Does buffer fillStyle change which kinds of tiles I can use?
+      map_index++;
+    }
+  }
+}
+
+// This function resizes the CSS width and height of the DISPLAY canvas to force it to scale to fit the window.
+function resize(event) {
+  var height = ctx.canvas.height;
+  var width = ctx.canvas.width;
+
+  // Makes sure the DISPLAY canvas is resized in a way that maintains the MAP's width/height ratio.
+  if (width / height < MAP.width_height_ratio) height = Math.floor(width / MAP.width_height_ratio);
+  else width = Math.floor(height * MAP.width_height_ratio);
+
+}
+
+// Setting the initial height and width of the BUFFER and DISPLAY canvases.
+ctx.canvas.width = MAP.width;
+ctx.canvas.height = MAP.height;
+ctx.imageSmoothingEnabled = false;
+
+window.addEventListener('resize', resize);

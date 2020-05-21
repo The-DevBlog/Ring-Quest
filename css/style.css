@@ -33,6 +33,11 @@ canvas {
   text-align: center;
 }
 
+footer {
+  font-size: 18px;
+  padding-left: 30px;
+}
+
 iframe {
   display: block;
   margin: auto;
@@ -124,6 +129,20 @@ nav :hover {
   color:#53453c;
   font-family: inherit;
   font-size: 18px;
+}
+
+#creepster {
+  float: right;
+  position: absolute;
+  left: 1200px;
+  bottom: -329px;
+}
+
+#smeagol {
+  position: absolute;
+  z-index: -1;
+  bottom: 10px;
+  left: 255px;
 }
 
 #demo {

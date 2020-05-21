@@ -7,7 +7,8 @@ var spriteSheet, floor, background, ring, platform;
 var spriteSize = 75;
 var drawPlayer;
 var TILE_SIZE = 100;
-loadImages();
+
+loadImages(); // preload images
 
 ctx = document.getElementById('myCanvas').getContext('2d');
 
@@ -173,14 +174,14 @@ controller = {
     var keyState = (event.type == 'keydown') ? true : false;
     // switch statement to determine which key is being pressed. This could have been done with an 'if.. else if' statement, but the switch statement is a much cleaner way to handle this. Also, each key on a keyboard has a specific 'keyCode' attached to it. keyCode is a built in JavaScript variable.
     switch (event.keyCode) {
-      case 65: // left arrow key
-        controller.left = keyState;
-        break;
-      case 87: // space bar key
-        controller.space = keyState;
-        break;
-      case 68: // right arrow key
-        controller.right = keyState;
+    case 65: // 'a' key
+      controller.left = keyState;
+      break;
+    case 87: // 'w' key
+      controller.space = keyState;
+      break;
+    case 68: // 'd' key
+      controller.right = keyState;
     }
   }
 };

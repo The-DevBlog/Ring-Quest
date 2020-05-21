@@ -3,14 +3,13 @@ var ctx;
 var controller;
 var character;
 var loop;
-var spriteSheet;
+var spriteSheet, floor, background, ring, platform;
 var spriteSize = 75;
 var drawPlayer;
 var TILE_SIZE = 100;
+loadImages();
 
 ctx = document.getElementById('myCanvas').getContext('2d');
-ctx.canvas.width = innerWidth;
-ctx.canvas.height = 825;
 
 var Animate = function (delay, frameSet) {
   this.delay = delay; // delay between frames
@@ -85,8 +84,6 @@ function Obstacle(height, width, x, y) {
   this.x = x;
   this.y = y;
 
-  // ctx.beginPath(); //TODO: uncomment
-
   // OBSTACLE COLLISION DETECTION - Note: Collision properties are a part of the "Obstacle" constructor, and therefore it is the Obstacles that check for character collision
 
   // Variables to determine generally which "side" of an obstacle a character is on - with small margins added/subtracted to serve as measures of "forgiveness" to allow collision properties some leeway to trigger
@@ -96,6 +93,7 @@ function Obstacle(height, width, x, y) {
   var isCharacterBelow = character.y > this.height + this.y - 40;
 
   // Variables to determine if actual "collision"/overlap of obstacle/character boundaries takes place
+
 
   // left side collision variable - determines if actual collision is taking place between character/obstacle
   var isRightSideOfCharacterOverlappingLeftSideOfObstacle = character.x + character.width > this.x;
@@ -117,7 +115,7 @@ function Obstacle(height, width, x, y) {
 
   // Boolean variable to ensure that character is colliding with obstacle on obstacle right within the "height" range of obstacle
   var isCollidingFromRight = isLeftSideOfCharacterOverlappingRightSideOfObstacle &&
-    isTopOfCharacterOverlappingBottomOfObstacle &&  
+    isTopOfCharacterOverlappingBottomOfObstacle &&
     isBottomOfCharacterOverlappingTopOfObstacle &&
     !isCharacterAbove &&
     isCharacterOnRight;
@@ -190,7 +188,7 @@ controller = {
 loop = function () {
 
   // controls jumping movement
-  if (controller.space && character.jumping == false) {
+  if (controller.space && character.jumping === false) {
     // negative y value will allow character to move up
     character.y_vel -= 60;
     // prevents character from jumping again if already jumping
@@ -226,14 +224,6 @@ loop = function () {
   character.x_vel *= 0.9;
   character.y_vel *= 0.9;
 
-  // collision detection for floor
-  // if character is falling below the floor
-  // var groundHeight = ctx.canvas.height - character.height; // new variable
-  // if (character.y > groundHeight - character.height) {
-  //   character.jumping = false; // allow to jump again
-  //   character.y = groundHeight; // dont fall past the floor
-  //   character.y_vel = 0; // stop if hits the floor
-  // }
   // if character is going past the left or right boundaries of the window
   if (character.x < 0) {
     character.x = 0;
@@ -243,13 +233,12 @@ loop = function () {
 
   // draw background
   renderTiles();
-  resize();
 
   // Invoke function to draw the player character
   drawPlayer();
 
   // Invoke function to draw the floor
-  drawFloor('green');
+  drawFloor();
 
   // update animation
   character.animate.update();
@@ -265,50 +254,23 @@ drawPlayer = function () {
 };
 
 // function to draw the floor with Obstacles() instances
-function drawFloor(color) {
-
+function drawFloor() {
 
   var floorHeight = 100;
-
+  //TODO: FIX THIS
   var xCoord = 0; // represents start of X-axis on canvas
   for (var i = 0; i < ctx.canvas.width; i++) {
-    new Obstacle(floorHeight, ctx.canvas.width * 1, xCoord, ctx.canvas.height - floorHeight);
+    new Obstacle(floorHeight, ctx.canvas.width, xCoord, ctx.canvas.height - floorHeight);
     xCoord += (ctx.canvas.width * .1);
-
-    // ctx.drawImage(spriteSheet.image2, xCoord, ctx.canvas.height - floorHeight);
   }
 }
 
 // start the animation loop AFTER the images have loaded
-spriteSheet.image.addEventListener('load', function (event) {
+spriteSheet.image.addEventListener('load', function () {
   window.requestAnimationFrame(loop);
 });
 
-spriteSheet.image.src = '../sprites/character75x75.png';
-
-// Event listeners for key presses
-window.addEventListener('keydown', controller.keyListener);
-window.addEventListener('keyup', controller.keyListener);
-
-// 3: ringOfPower
-var TILES = {
-  // background
-  0: {
-    image: new Image()
-  },
-
-  // floor and ceiling
-  1: {
-    image: new Image()
-  },
-  2: new Obstacle(),
-  3: {
-    color: '#FFD700' //TODO: correct and delete
-  },
-  4: {
-    image: new Image()
-  }
-};
+spriteSheet.image.src = './sprites/character75x75.png';
 
 // Holds info about the map, including tile indices array
 var MAP = {
@@ -326,7 +288,7 @@ var MAP = {
     0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1,
     0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
     0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3,
     0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 2, 2,
     0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 2, 2, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
@@ -339,6 +301,19 @@ var MAP = {
   ]
 };
 
+// load images to the page before the game starts
+function loadImages() {
+  floor = new Image();
+  background = new Image();
+  ring = new Image();
+  platform = new Image();
+
+  floor.src = './tile-images/floorpath.png';
+  background.src = './tile-images/plainbackgroundtile.png';
+  ring.src = './tile-images/ring.png';
+  platform.src = './tile-images/platform.png';
+}
+
 // Renders tiles to buffer
 function renderTiles() {
   var map_index = 0;
@@ -347,46 +322,41 @@ function renderTiles() {
   for (var top = 0; top < MAP.height; top += TILE_SIZE) {
     for (var left = 0; left < MAP.width; left += TILE_SIZE) {
 
-      var tile_value = MAP.tiles[map_index];
-      var tile = TILES[tile_value];
-
       // if statement to draw the correct sprite to the correct idx position on the tile map
       if (MAP.tiles[map_index] === 0) {
 
-        tile.image.src = '../tile-images/plainbackgroundtile.png';
-        ctx.drawImage(tile.image, left, top);
+        // draw background
+        ctx.drawImage(background, left, top);
+
       } else if (MAP.tiles[map_index] === 2) {
 
-        var img = new Image();
-        img.src = '../tile-images/platform.png';
-        ctx.drawImage(img, left, top);
-        new Obstacle(TILE_SIZE, TILE_SIZE, left, top);
+        // draw platform
+        ctx.drawImage(platform, left, top);
+
+        new Obstacle(100, 100, left, top);
+
+      } else if (MAP.tiles[map_index] === 3) {
+
+        // draw ring
+        ctx.drawImage(ring, left, top);
+        new Obstacle(100, 100, left, top);
+
       } else if (MAP.tiles[map_index] === 4 || MAP.tiles[map_index] === 1) {
 
-        tile.image.src = '../tile-images/floorpath.png';
-        ctx.drawImage(tile.image, left, top);
+        // draw floor
+        ctx.drawImage(floor, left, top);
       }
 
-      // Does buffer fillStyle change which kinds of tiles I can use?
       map_index++;
     }
   }
 }
 
-// This function resizes the CSS width and height of the DISPLAY canvas to force it to scale to fit the window.
-function resize(event) {
-  var height = ctx.canvas.height;
-  var width = ctx.canvas.width;
-
-  // Makes sure the DISPLAY canvas is resized in a way that maintains the MAP's width/height ratio.
-  if (width / height < MAP.width_height_ratio) height = Math.floor(width / MAP.width_height_ratio);
-  else width = Math.floor(height * MAP.width_height_ratio);
-
-}
-
-// Setting the initial height and width of the BUFFER and DISPLAY canvases.
+// Setting the initial height and width of the DISPLAY canvas.
 ctx.canvas.width = MAP.width;
 ctx.canvas.height = MAP.height;
-ctx.imageSmoothingEnabled = false;
 
-window.addEventListener('resize', resize);
+window.addEventListener('keydown', controller.keyListener);
+window.addEventListener('keyup', controller.keyListener);
+
+//TODO: delete debugger lines

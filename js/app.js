@@ -79,16 +79,13 @@ spriteSheet = {
   image2: new Image()
 };
 
-function Obstacle(height, width, x, y, color) {
+function Obstacle(height, width, x, y) {
   this.height = height;
   this.width = width;
   this.x = x;
   this.y = y;
-  this.color = color;
 
-  ctx.beginPath();
-  ctx.fillStyle = color;
-  ctx.fillRect(this.x, this.y, this.width, this.height);
+  // ctx.beginPath(); //TODO: uncomment
 
   // OBSTACLE COLLISION DETECTION - Note: Collision properties are a part of the "Obstacle" constructor, and therefore it is the Obstacles that check for character collision
 
@@ -275,7 +272,7 @@ function drawFloor(color) {
 
   var xCoord = 0; // represents start of X-axis on canvas
   for (var i = 0; i < ctx.canvas.width; i++) {
-    new Obstacle(floorHeight, ctx.canvas.width * 1, xCoord, ctx.canvas.height - floorHeight, color);
+    new Obstacle(floorHeight, ctx.canvas.width * 1, xCoord, ctx.canvas.height - floorHeight);
     xCoord += (ctx.canvas.width * .1);
 
     // ctx.drawImage(spriteSheet.image2, xCoord, ctx.canvas.height - floorHeight);
@@ -293,19 +290,20 @@ spriteSheet.image.src = '../sprites/character75x75.png';
 window.addEventListener('keydown', controller.keyListener);
 window.addEventListener('keyup', controller.keyListener);
 
-// 0: plainBackground
-// 1: floorpath
 // 3: ringOfPower
 var TILES = {
+  // background
   0: {
     image: new Image()
   },
+
+  // floor and ceiling
   1: {
     image: new Image()
   },
   2: new Obstacle(),
   3: {
-    color: '#FFD700'
+    color: '#FFD700' //TODO: correct and delete
   },
   4: {
     image: new Image()
@@ -336,8 +334,8 @@ var MAP = {
     0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
-    0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3,
-    1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1
+    0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
   ]
 };
 
@@ -359,16 +357,16 @@ function renderTiles() {
         ctx.drawImage(tile.image, left, top);
       } else if (MAP.tiles[map_index] === 2) {
 
-        new Obstacle(TILE_SIZE, TILE_SIZE, left, top, 'green');
+        var img = new Image();
+        img.src = '../tile-images/platform.png';
+        ctx.drawImage(img, left, top);
+        new Obstacle(TILE_SIZE, TILE_SIZE, left, top);
       } else if (MAP.tiles[map_index] === 4 || MAP.tiles[map_index] === 1) {
 
         tile.image.src = '../tile-images/floorpath.png';
         ctx.drawImage(tile.image, left, top);
-      } else {
-
-        ctx.fillStyle = tile.color;
-        ctx.fillRect(left, top, TILE_SIZE, TILE_SIZE);
       }
+
       // Does buffer fillStyle change which kinds of tiles I can use?
       map_index++;
     }
@@ -384,9 +382,6 @@ function resize(event) {
   if (width / height < MAP.width_height_ratio) height = Math.floor(width / MAP.width_height_ratio);
   else width = Math.floor(height * MAP.width_height_ratio);
 
-  //TODO: delete??
-  // ctx.canvas.style.height = height + 'px'; 
-  // ctx.canvas.style.width = width + 'px';
 }
 
 // Setting the initial height and width of the BUFFER and DISPLAY canvases.

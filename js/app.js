@@ -178,13 +178,13 @@ controller = {
     var keyState = (event.type == 'keydown') ? true : false;
     // switch statement to determine which key is being pressed. This could have been done with an 'if.. else if' statement, but the switch statement is a much cleaner way to handle this. Also, each key on a keyboard has a specific 'keyCode' attached to it. keyCode is a built in JavaScript variable.
     switch (event.keyCode) {
-      case 37: // left arrow key
+      case 65: // left arrow key
         controller.left = keyState;
         break;
-      case 32: // space bar key
+      case 87: // space bar key
         controller.space = keyState;
         break;
-      case 39: // right arrow key
+      case 68: // right arrow key
         controller.right = keyState;
     }
   }

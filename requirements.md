@@ -39,3 +39,8 @@ Before starting the game, the user will submit their name to store the results i
 - Create collision logic with obstacles (i.e.: orcs that might capture Gollum).
 - Create a rudimentary health bar or meter to limit the number of collisions before “game over”.
 - Institute countdown timer (starting at 60 seconds) to limit the amount of time users have to complete the game before “game over”.
+
+
+### Resources
+
+* Jump sound effects obtained from https://www.zapsplat.com.

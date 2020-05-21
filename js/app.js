@@ -6,6 +6,7 @@ var loop;
 var spriteSheet;
 var spriteSize = 75;
 var drawPlayer;
+var TILE_SIZE = 100;
 
 ctx = document.getElementById('myCanvas').getContext('2d');
 ctx.canvas.width = innerWidth;
@@ -33,13 +34,14 @@ Animate.prototype = {
       this.frame = this.frameSet[this.frameIdx];
     }
   },
+
   // invoke on every game cycle
   update: function () {
     this.count++; // tracks game engine iterations
     // reset the count if it is equal to or greater than the delay, this enables the delay between frames
     if (this.count >= this.delay) {
       this.count = 0;
-      // this.frameIdx = (this.frameIdx === this.frameSet.length - 1) ? 0 : this.frameIdx + 1;
+
       // NOTE - the following if statement is the same as the above statement
       if (this.frameIdx === this.frameSet.length - 1) {
         this.frameIdx = 0;
@@ -73,22 +75,17 @@ spriteSheet = {
     [4, 5], // walking left
     [6] // jumping
   ],
-  image: new Image()
+  image: new Image(),
+  image2: new Image()
 };
 
-function Obstacle(height, width, x, y, color) {
+function Obstacle(height, width, x, y) {
   this.height = height;
   this.width = width;
   this.x = x;
   this.y = y;
-  this.color = color;
 
-  ctx.beginPath();
-  ctx.fillStyle = color;
-  ctx.fillRect(this.x, this.y, this.width, this.height);
-
-  //debugger;
-  //console.log('checking for COLLISION', character);
+  // ctx.beginPath(); //TODO: uncomment
 
   // OBSTACLE COLLISION DETECTION - Note: Collision properties are a part of the "Obstacle" constructor, and therefore it is the Obstacles that check for character collision
 
@@ -178,13 +175,13 @@ controller = {
     var keyState = (event.type == 'keydown') ? true : false;
     // switch statement to determine which key is being pressed. This could have been done with an 'if.. else if' statement, but the switch statement is a much cleaner way to handle this. Also, each key on a keyboard has a specific 'keyCode' attached to it. keyCode is a built in JavaScript variable.
     switch (event.keyCode) {
-      case 37: // left arrow key
+      case 65: // left arrow key
         controller.left = keyState;
         break;
-      case 32: // space bar key
+      case 87: // space bar key
         controller.space = keyState;
         break;
-      case 39: // right arrow key
+      case 68: // right arrow key
         controller.right = keyState;
     }
   }
@@ -269,11 +266,16 @@ drawPlayer = function () {
 
 // function to draw the floor with Obstacles() instances
 function drawFloor(color) {
-  var floorHeight = 100; // distance from bottom of Canvas to top of floor
+
+
+  var floorHeight = 100;
+
   var xCoord = 0; // represents start of X-axis on canvas
   for (var i = 0; i < ctx.canvas.width; i++) {
-    new Obstacle(floorHeight, ctx.canvas.width * 1, xCoord, ctx.canvas.height - floorHeight, color);
+    new Obstacle(floorHeight, ctx.canvas.width * 1, xCoord, ctx.canvas.height - floorHeight);
     xCoord += (ctx.canvas.width * .1);
+
+    // ctx.drawImage(spriteSheet.image2, xCoord, ctx.canvas.height - floorHeight);
   }
 }
 
@@ -288,20 +290,24 @@ spriteSheet.image.src = '../sprites/character75x75.png';
 window.addEventListener('keydown', controller.keyListener);
 window.addEventListener('keyup', controller.keyListener);
 
-// width and height for every tile
-var TILE_SIZE = 100;
-
+// 3: ringOfPower
 var TILES = {
+  // background
   0: {
-    color: '#552828'
-  }, // 0: plainBackground
+    image: new Image()
+  },
+
+  // floor and ceiling
   1: {
-    color: '#6B6B6B'
-  }, // 1: floorpath
+    image: new Image()
+  },
   2: new Obstacle(),
   3: {
-    color: '#FFD700'
-  }, // 3: ringOfPower
+    color: '#FFD700' //TODO: correct and delete
+  },
+  4: {
+    image: new Image()
+  }
 };
 
 // Holds info about the map, including tile indices array
@@ -310,7 +316,6 @@ var MAP = {
   rows: 14,
   height: 14 * TILE_SIZE,
   width: 16 * TILE_SIZE,
-
 
   // Used during image scaling to ensure rendered image isn't skewed
   width_height_ratio: 16 / 14,
@@ -329,8 +334,8 @@ var MAP = {
     0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
-    0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3,
-    1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1
+    0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
   ]
 };
 
@@ -345,16 +350,25 @@ function renderTiles() {
       var tile_value = MAP.tiles[map_index];
       var tile = TILES[tile_value];
 
-      if (MAP.tiles[map_index] === 2) {
-        new Obstacle(TILE_SIZE, TILE_SIZE, left, top, 'green');
-      } else {
+      // if statement to draw the correct sprite to the correct idx position on the tile map
+      if (MAP.tiles[map_index] === 0) {
 
-        ctx.fillStyle = tile.color;
-        ctx.fillRect(left, top, TILE_SIZE, TILE_SIZE);
+        tile.image.src = '../tile-images/plainbackgroundtile.png';
+        ctx.drawImage(tile.image, left, top);
+      } else if (MAP.tiles[map_index] === 2) {
+
+        var img = new Image();
+        img.src = '../tile-images/platform.png';
+        ctx.drawImage(img, left, top);
+        new Obstacle(TILE_SIZE, TILE_SIZE, left, top);
+      } else if (MAP.tiles[map_index] === 4 || MAP.tiles[map_index] === 1) {
+
+        tile.image.src = '../tile-images/floorpath.png';
+        ctx.drawImage(tile.image, left, top);
       }
+
       // Does buffer fillStyle change which kinds of tiles I can use?
       map_index++;
-
     }
   }
 }
@@ -368,8 +382,6 @@ function resize(event) {
   if (width / height < MAP.width_height_ratio) height = Math.floor(width / MAP.width_height_ratio);
   else width = Math.floor(height * MAP.width_height_ratio);
 
-  // ctx.canvas.style.height = height + 'px';
-  // ctx.canvas.style.width = width + 'px';
 }
 
 // Setting the initial height and width of the BUFFER and DISPLAY canvases.

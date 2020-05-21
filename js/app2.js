@@ -1,14 +1,10 @@
 //Pop-up Help Tab
-
 // get the popup
 var popup = document.getElementById('myModal');
-
 // get the button that opens the popup
 var btn = document.getElementById('myBtn');
-
 // get the span element that closes the popup
 var span = document.getElementsByClassName('close')[0];
-
 // when the user clicks the GamepadButton, open the popup
 btn.onclick = function () {
   popup.style.display = 'block';
@@ -17,21 +13,16 @@ btn.onclick = function () {
 span.onclick = function() {
   popup.style.display = 'none';
 };
-
 // when the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
   if (event.target === popup) {
     popup.style.display = 'none';
   }
 };
-
-
 //Feedback Form Submission
 var oldFeedbacks = [];
 function formSubmission() {
-
   var form = document.getElementById('form');
-
   function handleFormSubmit(event) {
     event.preventDefault();
     var name = event.target.name.value;
@@ -55,5 +46,4 @@ function formSubmission() {
   //event listener
   form.addEventListener('submit', handleFormSubmit);
 }
-
 formSubmission();

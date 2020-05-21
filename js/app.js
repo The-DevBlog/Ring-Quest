@@ -101,7 +101,6 @@ function Obstacle(height, width, x, y) {
   var isRightSideOfCharacterOverlappingLeftSideOfObstacle = character.x + character.width > this.x;
 
   // right side collision variable - determines if actual collision is taking place between character/obstacle
-  // var isLeftSideOfCharacterOverlappingRightSideOfObstacle = character.x - character.width < this.x + this.width - character.width;
   var isLeftSideOfCharacterOverlappingRightSideOfObstacle = character.x < this.x + this.width;
 
   // top side collision variable - determines if actual collision is taking place between character/obstacle

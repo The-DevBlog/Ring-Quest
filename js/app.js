@@ -270,30 +270,7 @@ spriteSheet.image.addEventListener('load', function () {
   window.requestAnimationFrame(loop);
 });
 
-spriteSheet.image.src = '../sprites/character75x75.png';
-
-var TILES = {
-  // background
-  0: {
-    image: new Image()
-  },
-
-  // floor and ceiling
-  1: {
-    image: new Image()
-  },
-
-  // platforms
-  2: new Obstacle(),
-
-  // ring
-  3: {
-    image: new Image()
-  },
-  4: { //TODO: what is this for?
-    image: new Image()
-  }
-};
+spriteSheet.image.src = './sprites/character75x75.png';
 
 // Holds info about the map, including tile indices array
 var MAP = {
@@ -331,10 +308,10 @@ function loadImages() {
   ring = new Image();
   platform = new Image();
 
-  floor.src = '../tile-images/floorpath.png';
-  background.src = '../tile-images/plainbackgroundtile.png';
-  ring.src = '../tile-images/ring.png';
-  platform.src = '../tile-images/platform.png';
+  floor.src = './tile-images/floorpath.png';
+  background.src = './tile-images/plainbackgroundtile.png';
+  ring.src = './tile-images/ring.png';
+  platform.src = './tile-images/platform.png';
 }
 
 // Renders tiles to buffer

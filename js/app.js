@@ -3,10 +3,11 @@ var ctx;
 var controller;
 var character;
 var loop;
-var spriteSheet;
+var spriteSheet, floor, background, ring, platform;
 var spriteSize = 75;
 var drawPlayer;
 var TILE_SIZE = 100;
+loadImages();
 
 ctx = document.getElementById('myCanvas').getContext('2d');
 
@@ -172,14 +173,14 @@ controller = {
     var keyState = (event.type == 'keydown') ? true : false;
     // switch statement to determine which key is being pressed. This could have been done with an 'if.. else if' statement, but the switch statement is a much cleaner way to handle this. Also, each key on a keyboard has a specific 'keyCode' attached to it. keyCode is a built in JavaScript variable.
     switch (event.keyCode) {
-    case 65: // left arrow key
-      controller.left = keyState;
-      break;
-    case 87: // space bar key
-      controller.space = keyState;
-      break;
-    case 68: // right arrow key
-      controller.right = keyState;
+      case 65: // left arrow key
+        controller.left = keyState;
+        break;
+      case 87: // space bar key
+        controller.space = keyState;
+        break;
+      case 68: // right arrow key
+        controller.right = keyState;
     }
   }
 };
@@ -265,7 +266,7 @@ function drawFloor() {
 }
 
 // start the animation loop AFTER the images have loaded
-spriteSheet.image.addEventListener('load', function (event) {
+spriteSheet.image.addEventListener('load', function () {
   window.requestAnimationFrame(loop);
 });
 
@@ -281,14 +282,15 @@ var TILES = {
   1: {
     image: new Image()
   },
+
+  // platforms
   2: new Obstacle(),
-  // 3: {
-  //   color: '#FFD700' //TODO: correct and delete
-  // },
+
+  // ring
   3: {
     image: new Image()
   },
-  4: {
+  4: { //TODO: what is this for?
     image: new Image()
   }
 };
@@ -322,6 +324,19 @@ var MAP = {
   ]
 };
 
+// load images to the page before the game starts
+function loadImages() {
+  floor = new Image();
+  background = new Image();
+  ring = new Image();
+  platform = new Image();
+
+  floor.src = '../tile-images/floorpath.png';
+  background.src = '../tile-images/plainbackgroundtile.png';
+  ring.src = '../tile-images/ring.png';
+  platform.src = '../tile-images/platform.png';
+}
+
 // Renders tiles to buffer
 function renderTiles() {
   var map_index = 0;
@@ -330,34 +345,29 @@ function renderTiles() {
   for (var top = 0; top < MAP.height; top += TILE_SIZE) {
     for (var left = 0; left < MAP.width; left += TILE_SIZE) {
 
-      var tile_value = MAP.tiles[map_index];
-      var tile = TILES[tile_value];
-
       // if statement to draw the correct sprite to the correct idx position on the tile map
       if (MAP.tiles[map_index] === 0) {
 
-        tile.image.src = '../tile-images/plainbackgroundtile.png';
-        ctx.drawImage(tile.image, left, top);
+        // draw background
+        ctx.drawImage(background, left, top);
 
       } else if (MAP.tiles[map_index] === 2) {
 
-        var img = new Image();
-        img.src = '../tile-images/platform.png';
-        ctx.drawImage(img, left, top);
+        // draw platform
+        ctx.drawImage(platform, left, top);
 
         new Obstacle(100, 100, left, top);
 
       } else if (MAP.tiles[map_index] === 3) {
 
         // draw ring
-        tile.image.src = '../tile-images/ring.png';
-        ctx.drawImage(tile.image, left, top);
+        ctx.drawImage(ring, left, top);
         new Obstacle(100, 100, left, top);
 
       } else if (MAP.tiles[map_index] === 4 || MAP.tiles[map_index] === 1) {
 
-        tile.image.src = '../tile-images/floorpath.png';
-        ctx.drawImage(tile.image, left, top);
+        // draw floor
+        ctx.drawImage(floor, left, top);
       }
 
       map_index++;

@@ -171,7 +171,7 @@ controller = {
   space: false,
   keyListener: function (event) {
     // if key is pressed down, keyState will equal true. If it is not pressed, keyState will get false
-    var keyState = (event.type == 'keydown') ? true : false;
+    var keyState = (event.type === 'keydown') ? true : false;
     // switch statement to determine which key is being pressed. This could have been done with an 'if.. else if' statement, but the switch statement is a much cleaner way to handle this. Also, each key on a keyboard has a specific 'keyCode' attached to it. keyCode is a built in JavaScript variable.
     switch (event.keyCode) {
     case 65: // 'a' key
@@ -238,9 +238,6 @@ loop = function () {
   // Invoke function to draw the player character
   drawPlayer();
 
-  // Invoke function to draw the floor
-  drawFloor();
-
   // update animation
   character.animate.update();
 
@@ -253,19 +250,6 @@ drawPlayer = function () {
   // cut out the sprite in chunks to display the correct frames
   ctx.drawImage(spriteSheet.image, character.animate.frame * spriteSize, 0, spriteSize, spriteSize, Math.floor(character.x), Math.floor(character.y), spriteSize, spriteSize);
 };
-
-// function to draw the floor with Obstacles() instances
-//TODO: possibly delete this and integrate it into the tile map?
-function drawFloor() {
-
-  var floorHeight = 100;
-  //TODO: FIX THIS
-  var xCoord = 0; // represents start of X-axis on canvas
-  for (var i = 0; i < ctx.canvas.width; i++) {
-    new Obstacle(floorHeight, ctx.canvas.width, xCoord, ctx.canvas.height - floorHeight);
-    xCoord += (ctx.canvas.width * .1);
-  }
-}
 
 // start the animation loop AFTER the images have loaded
 spriteSheet.image.addEventListener('load', function () {
@@ -299,7 +283,7 @@ var MAP = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0,
     2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
     2, 2, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+    4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
   ]
 };
 
@@ -347,6 +331,10 @@ function renderTiles() {
 
         // draw floor
         ctx.drawImage(floor, left, top);
+      } else if (MAP.tiles[map_index] === 4) {
+
+        ctx.drawImage(floor, left, top);
+        new Obstacle(100, 100, left, top);
       }
 
       map_index++;

@@ -273,10 +273,10 @@ drawPlayer = function () {
 function drawFloor() {
 
   var floorHeight = 100;
-
+  //TODO: FIX THIS
   var xCoord = 0; // represents start of X-axis on canvas
   for (var i = 0; i < ctx.canvas.width; i++) {
-    new Obstacle(floorHeight, ctx.canvas.width * 1, xCoord, ctx.canvas.height - floorHeight);
+    new Obstacle(floorHeight, ctx.canvas.width, xCoord, ctx.canvas.height - floorHeight);
     xCoord += (ctx.canvas.width * .1);
   }
 }

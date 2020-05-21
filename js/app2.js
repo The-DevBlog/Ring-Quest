@@ -27,6 +27,7 @@ window.onclick = function(event) {
 
 
 //Feedback Form Submission
+var oldFeedbacks = [];
 function formSubmission() {
 
   var form = document.getElementById('form');
@@ -36,14 +37,20 @@ function formSubmission() {
     var name = event.target.name.value;
     var email = event.target.email.value;
     var feedback = event.target.feedback.value;
-    console.log(name + ', ' + email + ', ' + feedback);
+    // console.log(name + ', ' + email + ', ' + feedback);
     // I need to check for all feedback in local storage, and add the new feedback to the old ones, and store in local Storage
     var feedbacks = [name, email, feedback];
+    oldFeedbacks.push(feedbacks);
     //adding user data to local storage
-    var stringifiedFeedbacks = JSON.stringify(feedbacks);
+    var stringifiedFeedbacks = JSON.stringify(oldFeedbacks);
     localStorage.setItem('data', stringifiedFeedbacks);
+    //Clearing the form after user submits it:
     var nameEl = document.getElementById('name');
     nameEl.value = '';
+    var emailEl = document.getElementById('email');
+    emailEl.value = '';
+    var feedbackEl = document.getElementById('feedback');
+    feedbackEl.value = '';
   }
   //event listener
   form.addEventListener('submit', handleFormSubmit);

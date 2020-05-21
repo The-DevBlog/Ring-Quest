@@ -255,6 +255,7 @@ drawPlayer = function () {
 };
 
 // function to draw the floor with Obstacles() instances
+//TODO: possibly delete this and integrate it into the tile map?
 function drawFloor() {
 
   var floorHeight = 100;
@@ -342,7 +343,7 @@ function renderTiles() {
         ctx.drawImage(ring, left, top);
         new Obstacle(100, 100, left, top);
 
-      } else if (MAP.tiles[map_index] === 4 || MAP.tiles[map_index] === 1) {
+      } else if (MAP.tiles[map_index] === 1) {
 
         // draw floor
         ctx.drawImage(floor, left, top);

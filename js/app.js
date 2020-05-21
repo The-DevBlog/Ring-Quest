@@ -90,10 +90,10 @@ function Obstacle(height, width, x, y) {
   // OBSTACLE COLLISION DETECTION - Note: Collision properties are a part of the "Obstacle" constructor, and therefore it is the Obstacles that check for character collision
 
   // Variables to determine generally which "side" of an obstacle a character is on - with small margins added/subtracted to serve as measures of "forgiveness" to allow collision properties some leeway to trigger
-  var isCharacterOnLeft = character.x + character.width < this.x;
-  var isCharacterOnRight = character.x > this.x + this.width;
+  var isCharacterOnLeft = character.x + character.width < this.x + 20;
+  var isCharacterOnRight = character.x > this.x + this.width - 20;
   var isCharacterAbove = character.y + character.height < this.y + 20;
-  var isCharacterBelow = character.y > this.height + this.y - 20;
+  var isCharacterBelow = character.y > this.height + this.y - 40;
 
   // Variables to determine if actual "collision"/overlap of obstacle/character boundaries takes place
 
@@ -101,7 +101,6 @@ function Obstacle(height, width, x, y) {
   var isRightSideOfCharacterOverlappingLeftSideOfObstacle = character.x + character.width > this.x;
 
   // right side collision variable - determines if actual collision is taking place between character/obstacle
-  // var isLeftSideOfCharacterOverlappingRightSideOfObstacle = character.x - character.width < this.x + this.width - character.width;
   var isLeftSideOfCharacterOverlappingRightSideOfObstacle = character.x < this.x + this.width;
 
   // top side collision variable - determines if actual collision is taking place between character/obstacle
@@ -118,8 +117,9 @@ function Obstacle(height, width, x, y) {
 
   // Boolean variable to ensure that character is colliding with obstacle on obstacle right within the "height" range of obstacle
   var isCollidingFromRight = isLeftSideOfCharacterOverlappingRightSideOfObstacle &&
-    isTopOfCharacterOverlappingBottomOfObstacle &&
+    isTopOfCharacterOverlappingBottomOfObstacle &&  
     isBottomOfCharacterOverlappingTopOfObstacle &&
+    !isCharacterAbove &&
     isCharacterOnRight;
 
   // Boolean variable to ensure that character is colliding with obstacle on obstacle top within the "width" range of obstacle
@@ -143,8 +143,8 @@ function Obstacle(height, width, x, y) {
 
     // second IF statement detects collision with RIGHT side of obstacle is TRUE
   } else if (isCollidingFromRight) {
-    //console.log('right collision', character, this);
-    //debugger;
+    // console.log('right collision', character, this);
+    // debugger;
     character.x = this.x + this.width;
     character.x_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
 
@@ -228,12 +228,12 @@ loop = function () {
 
   // collision detection for floor
   // if character is falling below the floor
-  var groundHeight = ctx.canvas.height - character.height; // new variable
-  if (character.y > groundHeight - character.height) {
-    character.jumping = false; // allow to jump again
-    character.y = groundHeight; // dont fall past the floor
-    character.y_vel = 0; // stop if hits the floor
-  }
+  // var groundHeight = ctx.canvas.height - character.height; // new variable
+  // if (character.y > groundHeight - character.height) {
+  //   character.jumping = false; // allow to jump again
+  //   character.y = groundHeight; // dont fall past the floor
+  //   character.y_vel = 0; // stop if hits the floor
+  // }
   // if character is going past the left or right boundaries of the window
   if (character.x < 0) {
     character.x = 0;
@@ -333,8 +333,8 @@ var MAP = {
     0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 2, 0, 0,
     0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
-    0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
+    2, 2, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
   ]
 };

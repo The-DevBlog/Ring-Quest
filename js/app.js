@@ -170,7 +170,7 @@ function Obstacle(height, width, x, y) {
 
     // This final IF statement checks if the player has found the ring, and will display a congratulatory message before re-setting the browser window to play again
   } else if (isTouchingRing) {
-    alert('You win!'); // this alert and below code ensures that the browser will reload and only run the alert once when winning the game
+    alert(`The precious is ours, ${userName}! We wins!`); // this alert and below code ensures that the browser will reload and only run the alert once when winning the game
     document.location.reload();
     clearInterval(interval);
   }

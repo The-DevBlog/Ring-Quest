@@ -28,8 +28,6 @@ function formSubmission() {
     var name = event.target.name.value;
     var email = event.target.email.value;
     var feedback = event.target.feedback.value;
-    // console.log(name + ', ' + email + ', ' + feedback);
-    // I need to check for all feedback in local storage, and add the new feedback to the old ones, and store in local Storage
     var feedbacks = [name, email, feedback];
     oldFeedbacks.push(feedbacks);
     //adding user data to local storage
@@ -47,3 +45,5 @@ function formSubmission() {
   form.addEventListener('submit', handleFormSubmit);
 }
 formSubmission();
+
+

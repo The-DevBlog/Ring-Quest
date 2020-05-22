@@ -15,12 +15,14 @@
   <header>
     <section id="logo">
       <h1>Golum's Quest</h1>
+      <img id="smeagol" src="sprites/creature.png" alt="creature" height="70px">
     </section>
     <nav>
       <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="game.html">Game</a></li>
         <li><a href="about.html">About Us</a></li>
+        <li><a href="merch.html">Merch</a></li>
         <li><button id="myBtn">Help</button></li>
       </ul>
     </nav>
@@ -30,22 +32,24 @@
       <div class="modal-content">
         <span class="close">&times;</span>
         <p>Are you stuck?</p>
+        <p>Help Gollum on his quest to find the ring! <br>
+          A Move left <br>
+          D Move right <br>
+          W Jump<br>
+          Get to the ring to complete the game!</p>
       </div>
     </div>
   </header>
   <main>
     <section id="welcome">
       <p>Welcome to the game! <br> Help Golum find his precious ring.</p>
-      <button id="play"><a href="game.html">Start Playing</a></button>
-    </section>
-    <section>
-      <!-- <iframe src="" title="Golum's Quest Preview"></iframe> -->
-    </section>
-    <!-- <section>
-      <canvas id="myCanvas"></canvas>
-    </section>
-  -->
 
+    <button id="play"><a href="game.html">Start Playing</a></button>
+  </section>
+  <section id="demo">
+    <video src="demo/gameDemo.mp4" width="800" height="600" title="Golum's Quest Preview" autoplay loop></video>
+    <img id="creepster" src="sprites/creature2.png" alt="creature">
+  </section>  
 
     <footer>
       <p>&copy 2020 Team For Loops</p>

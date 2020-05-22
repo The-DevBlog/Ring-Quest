@@ -7,7 +7,11 @@ var spriteSheet, floor, background, ring, platform;
 var spriteSize = 75;
 var drawPlayer;
 var TILE_SIZE = 100;
-loadImages();
+
+var jumpSound = new Audio('./sounds/jump.mp3');
+jumpSound.volume = 0.5;
+
+loadImages(); // preload images
 
 ctx = document.getElementById('myCanvas').getContext('2d');
 
@@ -170,16 +174,16 @@ controller = {
   space: false,
   keyListener: function (event) {
     // if key is pressed down, keyState will equal true. If it is not pressed, keyState will get false
-    var keyState = (event.type == 'keydown') ? true : false;
+    var keyState = (event.type === 'keydown') ? true : false;
     // switch statement to determine which key is being pressed. This could have been done with an 'if.. else if' statement, but the switch statement is a much cleaner way to handle this. Also, each key on a keyboard has a specific 'keyCode' attached to it. keyCode is a built in JavaScript variable.
     switch (event.keyCode) {
-      case 65: // left arrow key
+      case 65: // "A" key to go left
         controller.left = keyState;
         break;
-      case 87: // space bar key
+      case 87: // "W" key to jump
         controller.space = keyState;
         break;
-      case 68: // right arrow key
+      case 68: // "D" key to go right
         controller.right = keyState;
     }
   }
@@ -193,6 +197,8 @@ loop = function () {
     character.y_vel -= 60;
     // prevents character from jumping again if already jumping
     character.jumping = true;
+    jumpSound.play();
+    //document.getElementById("sounds/jump.mp3").play();
   }
 
   // if character is jumping, display jumping sprite set
@@ -237,9 +243,6 @@ loop = function () {
   // Invoke function to draw the player character
   drawPlayer();
 
-  // Invoke function to draw the floor
-  drawFloor();
-
   // update animation
   character.animate.update();
 
@@ -252,18 +255,6 @@ drawPlayer = function () {
   // cut out the sprite in chunks to display the correct frames
   ctx.drawImage(spriteSheet.image, character.animate.frame * spriteSize, 0, spriteSize, spriteSize, Math.floor(character.x), Math.floor(character.y), spriteSize, spriteSize);
 };
-
-// function to draw the floor with Obstacles() instances
-function drawFloor() {
-
-  var floorHeight = 100;
-  //TODO: FIX THIS
-  var xCoord = 0; // represents start of X-axis on canvas
-  for (var i = 0; i < ctx.canvas.width; i++) {
-    new Obstacle(floorHeight, ctx.canvas.width, xCoord, ctx.canvas.height - floorHeight);
-    xCoord += (ctx.canvas.width * .1);
-  }
-}
 
 // start the animation loop AFTER the images have loaded
 spriteSheet.image.addEventListener('load', function () {
@@ -297,7 +288,7 @@ var MAP = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0,
     2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0,
     2, 2, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+    4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
   ]
 };
 
@@ -341,10 +332,14 @@ function renderTiles() {
         ctx.drawImage(ring, left, top);
         new Obstacle(100, 100, left, top);
 
-      } else if (MAP.tiles[map_index] === 4 || MAP.tiles[map_index] === 1) {
+      } else if (MAP.tiles[map_index] === 1) {
 
         // draw floor
         ctx.drawImage(floor, left, top);
+      } else if (MAP.tiles[map_index] === 4) {
+
+        ctx.drawImage(floor, left, top);
+        new Obstacle(100, 100, left, top);
       }
 
       map_index++;

@@ -136,6 +136,9 @@ function Obstacle(height, width, x, y) {
     isLeftSideOfCharacterOverlappingRightSideOfObstacle &&
     isRightSideOfCharacterOverlappingLeftSideOfObstacle;
 
+  // End game variable
+  var isTouchingRing = (character.x + character.width > MAP.width - 80 && character.y < 600) && (character.x + character.width > MAP.width - 80 && character.y > 400);
+
   // first IF statement detects collision with LEFT side of obstacle is TRUE
   if (isCollidingFromLeft) {
     //console.log('left collision', character, this);
@@ -164,6 +167,10 @@ function Obstacle(height, width, x, y) {
     //debugger;
     character.y = this.y + this.height;
     character.y_vel = 0; // reduce velocity to zero to ensure character stops immediately without sinking into obstacle object
+  } else if (isTouchingRing) {
+    alert('You win!'); // this alert and below code ensures that the browser will reload and only run the alert once when winning the game
+    document.location.reload();
+    clearInterval(interval);
   }
 }
 
@@ -330,7 +337,7 @@ function renderTiles() {
 
         // draw ring
         ctx.drawImage(ring, left, top);
-        new Obstacle(100, 100, left, top);
+        //new Obstacle(100, 100, left, top);
 
       } else if (MAP.tiles[map_index] === 1) {
 
@@ -353,5 +360,3 @@ ctx.canvas.height = MAP.height;
 
 window.addEventListener('keydown', controller.keyListener);
 window.addEventListener('keyup', controller.keyListener);
-
-//TODO: delete debugger lines

@@ -38,7 +38,7 @@ footer {
   padding-left: 30px;
 }
 
-iframe {
+video {
   display: block;
   margin: auto;
   padding: 20px 10px 20px 10px;
@@ -128,7 +128,7 @@ nav :hover {
 #welcome p {
   color:#53453c;
   font-family: inherit;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 #creepster {

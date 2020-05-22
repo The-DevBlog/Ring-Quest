@@ -11,5 +11,6 @@ A Lord of the Rings based adventure featuring Gollum's quest to find the One Rin
 - Marta Anthony
 - Andrew Smith
 
-[Project Management Board](https://trello.com/b/FDi7BtZE/201-final-project)
-[Software Requirements Document](/requirements.md)
+[Project Management Board](https://trello.com/b/FDi7BtZE/201-final-project)  
+[Software Requirements Document](/requirements.md)  
+[User Stories Board](https://trello.com/b/fFQhGQ1A/user-stories)  

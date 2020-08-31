@@ -1,10 +1,20 @@
-# 201-final-project
+# Ring Quest
 Code Fellows 201 Final Project:
-A Lord of the Rings based adventure featuring Gollum's quest to find the One Ring.
+A 2d platformer game with the objective of moving the player from point A to point B (a ring).
+
+### How to play
+
+- Follow this [link](https://andrewcs149.github.io/Ring-Quest/)
+
+### Controls 
+
+- Move left - A
+- Move right - D
+- Jump - W
 
 ---
 
-#### Project Members
+### Project Members
 
 - Diane Stephani
 - Alex Whan

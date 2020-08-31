@@ -6,6 +6,8 @@ A 2d platformer game with the objective of moving the player from point A to poi
 
 - Follow this [link](https://andrewcs149.github.io/Ring-Quest/)
 
+---
+
 ### Controls 
 
 - Move left - A

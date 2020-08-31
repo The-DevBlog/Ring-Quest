@@ -2,6 +2,8 @@
 Code Fellows 201 Final Project:
 A 2d platformer game with the objective of moving the player from point A to point B (a ring).
 
+---
+
 ### How to play
 
 - Follow this [link](https://andrewcs149.github.io/Ring-Quest/)
